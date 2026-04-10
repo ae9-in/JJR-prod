@@ -1,0 +1,17 @@
+{
+  "name": "jaya-janardhana-all-in-one",
+  "version": "1.0.0",
+  "scripts": {
+    "install-all": "npm install && npm install --prefix backend && npm install --prefix next-subscription",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix next-subscription\"",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "mongodb": "^7.1.1",
+    "mongoose": "^9.3.3",
+    "razorpay": "^2.9.6"
+  }
+}
