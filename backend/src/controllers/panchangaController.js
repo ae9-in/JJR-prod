@@ -43,7 +43,7 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
     // 3. Call HuggingFace Inference API
     // Using a more standard stable model
     const response = await fetch(
-      'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2',
+      'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3',
       {
         method: 'POST',
         headers: {
@@ -69,6 +69,14 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
       
       console.error('HuggingFace API error:', response.status, errorData);
       
+      // Special handling for model loading
+      if (response.status === 503) {
+        return res.status(200).json({
+          success: true,
+          data: '🙏 The AI Panchanga service is currently warming up its divine energy. Please try again in 20-30 seconds.'
+        });
+      }
+
       return res.status(response.status).json({
         success: false,
         message: `AI Service Error (${response.status})`,
