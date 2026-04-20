@@ -252,16 +252,24 @@ function PanchangaSection() {
     setLoading(true);
 
     try {
+      // Very basic extraction logic: assume input is location if no other info
+      // default date to today
+      const today = new Date().toISOString().split('T')[0];
+      
       const res = await fetch(`${API_URL}/panchanga`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMsg, history: messages })
+        body: JSON.stringify({ 
+          date: today, 
+          location: userMsg 
+        })
       });
       const data = await res.json();
-      if (data.reply) {
-        setMessages([...newMessages, { role: 'assistant', content: data.reply }]);
-      } else if (data.error) {
-        setMessages([...newMessages, { role: 'assistant', content: `🙏 ${data.error}` }]);
+      
+      if (data.success) {
+        setMessages([...newMessages, { role: 'assistant', content: data.data }]);
+      } else {
+        setMessages([...newMessages, { role: 'assistant', content: `🙏 ${data.message || 'Something went wrong.'}` }]);
       }
     } catch (err: any) {
       setMessages([...newMessages, { role: 'assistant', content: '🙏 Unable to reach the Panchanga service. Please ensure the backend is running.' }]);
