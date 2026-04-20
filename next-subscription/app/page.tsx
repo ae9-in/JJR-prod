@@ -136,8 +136,23 @@ function AuthModal({ mode, setMode, onLogin }: { mode: 'login' | 'register' | nu
   const inputStyle = { width: '100%', padding: '16px', borderRadius: '12px', background: C.white, border: `2px solid transparent`, color: C.maroon, outline: 'none', marginBottom: '16px', fontFamily: 'Inter,sans-serif', boxSizing: 'border-box' as 'border-box', fontWeight: 500 };
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(26,3,3,0.95)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)' }}>
-      <div style={{ background: 'rgba(26,3,3,1)', border: `1px solid ${C.gold}33`, borderRadius: '24px', padding: '48px', width: '100%', maxWidth: '400px', position: 'relative' }}>
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,1)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+      
+      {/* High-Performance Video Engine */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none', transform: 'translateZ(0)' }}>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6, transform: 'translate3d(0,0,0)', backfaceVisibility: 'hidden' }}
+        >
+          <source src="/assets/Whisk_mmzhbtm5mdnlz2yj1sm1qtytmgzkrtl2itmy0cm.mp4" type="video/mp4" />
+        </video>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.8))' }} />
+      </div>
+
+      <div style={{ background: 'rgba(26,3,3,0.8)', border: `1px solid ${C.gold}33`, borderRadius: '24px', padding: '48px', width: '100%', maxWidth: '400px', position: 'relative', zIndex: 1, backdropFilter: 'blur(10px)', transform: 'translateZ(0)' }}>
         <button onClick={() => setMode(null)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', color: C.gold, border: 'none', fontSize: '20px', cursor: 'pointer' }}>✕</button>
         <div style={{ fontSize: '32px', marginBottom: '16px', textAlign: 'center' }}>🕯️</div>
         <h2 style={{ fontSize: '24px', fontWeight: 700, color: C.white, marginBottom: '24px', textAlign: 'center' }}>{mode === 'login' ? 'Customer Login' : 'Register Account'}</h2>
