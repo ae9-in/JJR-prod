@@ -2,14 +2,18 @@
 import { NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || '',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || '',
-});
-
 export async function POST(req: Request) {
   try {
     const { planId, planName, planPrice, userId, name, email, phone, address } = await req.json();
+
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      throw new Error('Razorpay keys are missing in environment variables');
+    }
+
+    const razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
 
     const totalAmount = Number(planPrice); // Already in paise from frontend
     const invoiceNumber = `INV-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
