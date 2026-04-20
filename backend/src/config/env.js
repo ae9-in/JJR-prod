@@ -16,5 +16,6 @@ export const env = {
   mongodbUri: process.env.MONGODB_URI,
   jwtSecret: process.env.JWT_SECRET,
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
-  huggingfaceApiKey: process.env.HUGGINGFACE_API_KEY || ''
+  huggingfaceApiKey: process.env.HUGGINGFACE_API_KEY || '',
+  vedikaApiKey: process.env.VEDIKA_API_KEY || ''
 };

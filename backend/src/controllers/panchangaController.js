@@ -2,112 +2,112 @@ import { asyncHandler } from '../middleware/asyncHandler.js';
 import { env } from '../config/env.js';
 
 export const generatePanchanga = asyncHandler(async (req, res) => {
-  const { date, location } = req.body;
+  const { date } = req.body;
 
   // 1. Validate inputs
-  if (!date || !location) {
+  if (!date) {
     return res.status(400).json({
       success: false,
-      message: 'Both date and location are required.'
+      message: 'Date is required.'
     });
   }
 
-  const apiKey = env.huggingfaceApiKey ? env.huggingfaceApiKey.trim() : '';
+  // Check keys
+  const hfKey = env.huggingfaceApiKey ? env.huggingfaceApiKey.trim() : '';
+  const vedikaKey = env.vedikaApiKey ? env.vedikaApiKey.trim() : '';
 
-  if (!apiKey) {
+  if (!hfKey || !vedikaKey) {
     return res.status(500).json({ 
       success: false,
-      message: 'Hugging Face API key is not configured' 
+      message: 'Service API keys are not configured' 
     });
   }
 
-  // 2. Prepare the prompt for the AI
-  const prompt = `You are a Hindu Panchanga assistant. Generate an accurate Panchanga for the following:
-  Date: ${date}
-  Location: ${location}
-
-  Panchanga must include:
-  - Day (weekday)
-  - Tithi
-  - Nakshatra
-  - Yoga
-  - Karana
-  - Sunrise and Sunset
-  - Rahu Kalam
-  - Yamagandam
-  - Gulika Kalam
-
-  Start with a short spiritual message. Then display the Panchanga in a clean structured format using emojis. End with a short positive spiritual blessing.
-  
-  Response must be in plain text format but well-structured.`;
-
   try {
-    // 3. Call HuggingFace Inference API
-    // Using Zephyr which is very stable on the Free Inference API
-    const response = await fetch(
-      'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          inputs: `<|user|>\n${prompt}</s>\n<|assistant|>`,
-          parameters: {
-            max_new_tokens: 800,
-            temperature: 0.7,
-            return_full_text: false,
-            do_sample: true
-          }
-        })
+    // 2. STEP 1: Call Vedika API for high-accuracy data
+    // Bangalore defaults (12.97, 77.59)
+    const vedikaUrl = `https://api.vedika.io/v1/panchang/daily?date=${date}&latitude=12.97&longitude=77.59`;
+    
+    console.log(`Calling Vedika API for date: ${date}`);
+    const vedikaResponse = await fetch(vedikaUrl, {
+      headers: {
+        'x-api-key': vedikaKey,
+        'Content-Type': 'application/json'
       }
-    );
+    });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      let errorData;
-      try { errorData = JSON.parse(errorText); } catch (e) { errorData = errorText; }
-      
-      console.error('HuggingFace API error:', response.status, errorData);
-      
-      // Special handling for model loading
-      if (response.status === 503) {
-        return res.status(200).json({
-          success: true,
-          data: '🙏 The AI Panchanga service is currently warming up its divine energy. Please try again in 20-30 seconds.'
-        });
-      }
-
-      return res.status(response.status).json({
+    if (!vedikaResponse.ok) {
+      const vError = await vedikaResponse.text();
+      console.error('Vedika API error:', vedikaResponse.status, vError);
+      return res.status(500).json({
         success: false,
-        message: `AI Service Error (${response.status})`,
-        details: errorData?.error || errorData?.message || errorText
+        message: 'Panchanga data error',
+        details: vError
       });
     }
 
-    const result = await response.json();
-    let generatedText = '';
+    const panchangaData = await vedikaResponse.json();
 
-    if (Array.isArray(result) && result.length > 0) {
-      generatedText = result[0].generated_text || '';
-    } else if (result.generated_text) {
-      generatedText = result.generated_text;
-    } else {
-      throw new Error('Invalid response format from AI service');
+    // 3. STEP 2: Send data to Hugging Face for spiritual formatting
+    const aiPrompt = `Format this Panchanga data in a clean, structured, spiritual way with a short blessing message at the beginning and end. Do not change any values.
+
+Panchanga Data:
+${JSON.stringify(panchangaData, null, 2)}`;
+
+    try {
+      console.log('Requesting AI formatting...');
+      const hfResponse = await fetch(
+        'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${hfKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            inputs: `<|user|>\n${aiPrompt}</s>\n<|assistant|>`,
+            parameters: {
+              max_new_tokens: 1000,
+              temperature: 0.7,
+              return_full_text: false,
+              do_sample: true
+            }
+          })
+        }
+      );
+
+      if (!hfResponse.ok) {
+        throw new Error(`AI Service returned ${hfResponse.status}`);
+      }
+
+      const hfResult = await hfResponse.json();
+      let formattedText = '';
+      
+      if (Array.isArray(hfResult) && hfResult.length > 0) {
+        formattedText = hfResult[0].generated_text || '';
+      } else if (hfResult.generated_text) {
+        formattedText = hfResult.generated_text;
+      }
+
+      return res.json({
+        success: true,
+        data: formattedText.trim()
+      });
+
+    } catch (aiError) {
+      console.warn('AI Formatting failed, falling back to raw data:', aiError.message);
+      // Fallback Step: If AI fails → return raw Vedika data
+      return res.json({
+        success: true,
+        data: `🙏 (AI Formatting Unavailable)\n\n${JSON.stringify(panchangaData, null, 2)}\n\nMay this day bring you divine peace.`
+      });
     }
 
-    // 4. Return success response
-    res.json({
-      success: true,
-      data: generatedText.trim()
-    });
-
   } catch (error) {
-    console.error('Panchanga generation error:', error.message);
+    console.error('Full process error:', error.message);
     res.status(500).json({
       success: false,
-      message: 'Failed to generate Panchanga. Please try again later.',
+      message: 'Failed to process Panchanga request.',
       details: error.message
     });
   }
