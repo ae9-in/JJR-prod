@@ -11,8 +11,6 @@ import addressRoutes from './routes/addressRoutes.js';
 import panchangaRoutes from './routes/panchangaRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
-const app = express();
-
 const allowedOrigins = [
   ...env.frontendUrl.split(',').map(o => o.trim().replace(/\/$/, '')),
   'http://localhost:3000',
@@ -20,11 +18,15 @@ const allowedOrigins = [
   'http://localhost:3002'
 ];
 
+const app = express();
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
-        callback(null, true);
+      if (!origin) return callback(null, true);
+      const normalizedOrigin = origin.replace(/\/$/, '');
+      if (allowedOrigins.includes(normalizedOrigin)) {
+        callback(null, origin); // Echo EXACT string back to browser
       } else {
         callback(new Error('Not allowed by CORS'));
       }
