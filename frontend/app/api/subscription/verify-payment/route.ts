@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, subscriberId } = await req.json();
 
     // Verify Razorpay signature — no DB needed
-    const secret = process.env.RAZORPAY_KEY_SECRET || '';
+    const secret = (process.env.RAZORPAY_KEY_SECRET as string) || '';
     const hmac = crypto.createHmac('sha256', secret);
     hmac.update(razorpay_order_id + '|' + razorpay_payment_id);
     const expectedSignature = hmac.digest('hex');
