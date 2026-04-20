@@ -14,24 +14,38 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
   let finalPanchangaData = null;
   let isAiEstimation = false;
 
-  try {
-    // 1. TRY VEDIKA FIRST (Accuracy)
-    const vedikaUrl = `https://api.vedika.io/v1/panchang/daily?date=${date}&latitude=12.97&longitude=77.59`;
-    
-    const vedikaResponse = await fetch(vedikaUrl, {
-      headers: {
-        'x-api-key': vedikaKey,
-        'Content-Type': 'application/json',
-        'User-Agent': 'JJR-Storefront/1.0'
-      }
-    });
+  // If no Vedika key, go straight to AI estimation
+  if (!vedikaKey) {
+    isAiEstimation = true;
+  }
 
-    if (vedikaResponse.ok) {
-      finalPanchangaData = await vedikaResponse.json();
-    } else {
-      const vError = await vedikaResponse.text();
-      console.warn('Vedika API unavailable, will attempt AI estimation:', vError);
-      isAiEstimation = true;
+  if (!hfKey) {
+    return res.status(500).json({ 
+      success: false,
+      message: 'Hugging Face API key is not configured' 
+    });
+  }
+
+  try {
+    if (!isAiEstimation) {
+      // 1. TRY VEDIKA FIRST (Accuracy)
+      const vedikaUrl = `https://api.vedika.io/v1/panchang/daily?date=${date}&latitude=12.97&longitude=77.59`;
+      
+      const vedikaResponse = await fetch(vedikaUrl, {
+        headers: {
+          'x-api-key': vedikaKey,
+          'Content-Type': 'application/json',
+          'User-Agent': 'JJR-Storefront/1.0'
+        }
+      });
+
+      if (vedikaResponse.ok) {
+        finalPanchangaData = await vedikaResponse.json();
+      } else {
+        const vError = await vedikaResponse.text();
+        console.warn('Vedika API unavailable, will attempt AI estimation:', vError);
+        isAiEstimation = true;
+      }
     }
   } catch (error) {
     console.warn('Vedika request failed:', error.message);
@@ -57,7 +71,7 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
           'User-Agent': 'JJR-Storefront/1.0'
         },
         body: JSON.stringify({
-          model: 'mistralai/Mistral-7B-Instruct-v0.3', // Highly reliable on this endpoint
+          model: 'mistralai/Mistral-7B-Instruct-v0.3', 
           messages: [{ role: 'user', content: aiPrompt }],
           max_tokens: 1000,
           temperature: 0.7
