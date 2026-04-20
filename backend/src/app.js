@@ -13,9 +13,23 @@ import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
 const app = express();
 
+const allowedOrigins = [
+  ...env.frontendUrl.split(',').map(o => o.trim().replace(/\/$/, '')),
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3002'
+];
+
 app.use(
   cors({
-    origin: env.frontendUrl
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true
   })
 );
 app.use(express.json());
