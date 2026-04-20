@@ -12,7 +12,9 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
     });
   }
 
-  if (!env.huggingfaceApiKey) {
+  const apiKey = env.huggingfaceApiKey ? env.huggingfaceApiKey.trim() : '';
+
+  if (!apiKey) {
     return res.status(500).json({ 
       success: false,
       message: 'Hugging Face API key is not configured' 
@@ -41,20 +43,20 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
 
   try {
     // 3. Call HuggingFace Inference API
-    // Using a more standard stable model
+    // Using Zephyr which is very stable on the Free Inference API
     const response = await fetch(
-      'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3',
+      'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
       {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${env.huggingfaceApiKey}`,
+          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          inputs: `[INST] ${prompt} [/INST]`,
+          inputs: `<|user|>\n${prompt}</s>\n<|assistant|>`,
           parameters: {
             max_new_tokens: 800,
-            temperature: 0.3,
+            temperature: 0.7,
             return_full_text: false,
             do_sample: true
           }
