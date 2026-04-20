@@ -53,7 +53,7 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => scrollTo('home')}>
         <div style={{ width: 32, height: 32, border: `1px solid ${C.gold}44`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 16 }}>🕯️</span>
+          <span style={{ fontSize: 16, filter: 'brightness(1.5)' }}>🕯️</span>
         </div>
         <div>
           <div style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.15em', color: C.gold }}>JAYA JANARDHANA</div>
@@ -310,7 +310,9 @@ function PanchangaSection() {
             background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '20px', boxShadow: `0 4px 15px ${C.gold}40`
-          }}>🕉️</div>
+          }}>
+            <span style={{ filter: 'drop-shadow(0 0 1px white) brightness(1.2)' }}>🕉️</span>
+          </div>
           <div>
             <div style={{ fontSize: '15px', fontWeight: 700, color: C.white, letterSpacing: '0.05em' }}>Panchanga Assistant</div>
             <div style={{ fontSize: '11px', color: C.gold, opacity: 0.7, fontFamily: 'Inter,sans-serif' }}>Hindu Calendar • AI Powered</div>
@@ -325,7 +327,7 @@ function PanchangaSection() {
         }}>
           {messages.length === 0 && (
             <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-              <div style={{ fontSize: '48px', marginBottom: '20px', opacity: 0.8 }}>🪔</div>
+              <div style={{ fontSize: '48px', marginBottom: '20px', filter: 'drop-shadow(0 0 2px rgba(197,160,89,0.5))' }}>🪔</div>
               <p style={{ fontSize: '15px', color: C.beige, opacity: 0.7, marginBottom: '28px', fontFamily: 'Inter,sans-serif', lineHeight: 1.6 }}>
                 Namaste! Ask me for your daily Panchanga.<br />Provide a date and city to get started.
               </p>
@@ -417,7 +419,9 @@ function PanchangaSection() {
             opacity: loading || !input.trim() ? 0.5 : 1,
             transition: 'all 0.2s', fontSize: '18px',
             boxShadow: `0 4px 15px ${C.gold}30`, flexShrink: 0
-          }}>🙏</button>
+          }}>
+            <span style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3)) contrast(1.2) brightness(1.2)' }}>🙏</span>
+          </button>
         </form>
       </div>
 
