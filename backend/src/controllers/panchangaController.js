@@ -64,10 +64,14 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
       if (hfResponse.status === 503) {
         return res.json({
           success: true,
-          data: "🙏 The AI Panchanga assistant is currently warming up its divine energy. Please try again in 20-30 seconds."
+          data: "🙏 The AI is warming up. Please try again in 30 seconds."
         });
       }
-      throw new Error(`AI Service error: ${hfErr}`);
+      return res.status(500).json({ 
+        success: false, 
+        message: 'AI Service Error', 
+        details: hfErr 
+      });
     }
 
     const hfResult = await hfResponse.json();
@@ -79,16 +83,20 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
       formattedText = hfResult.generated_text || '';
     }
 
+    if (!formattedText) {
+      throw new Error("AI returned an empty response.");
+    }
+
     return res.json({
       success: true,
       data: formattedText.trim()
     });
 
   } catch (error) {
-    console.error('AI generation error:', error.message);
+    console.error('Panchanga Error:', error.message);
     return res.status(500).json({
       success: false,
-      message: 'Failed to generate Panchanga. Please try again later.',
+      message: 'Failed to generate Panchanga.',
       details: error.message
     });
   }
