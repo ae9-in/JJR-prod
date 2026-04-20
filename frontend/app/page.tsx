@@ -10,7 +10,7 @@ const C = {
   maroon: '#1A0303', maroonLight: '#2D0505', beige: '#E6D5B8',
   white: '#F5F0E1', success: '#10b981', error: '#ef4444'
 };
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
 
 // ─── PRODUCTS ─────────────────────────────────────────────────────────────────
 const PRODUCTS = [
