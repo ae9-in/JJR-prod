@@ -9,15 +9,6 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
   }
 
   const hfKey = env.huggingfaceApiKey ? env.huggingfaceApiKey.trim() : '';
-  const vedikaKey = env.vedikaApiKey ? env.vedikaApiKey.trim() : '';
-
-  let finalPanchangaData = null;
-  let isAiEstimation = false;
-
-  // If no Vedika key, go straight to AI estimation
-  if (!vedikaKey) {
-    isAiEstimation = true;
-  }
 
   if (!hfKey) {
     return res.status(500).json({ 
@@ -26,41 +17,27 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
     });
   }
 
-  try {
-    if (!isAiEstimation) {
-      // 1. TRY VEDIKA FIRST (Accuracy)
-      const vedikaUrl = `https://api.vedika.io/v1/panchang/daily?date=${date}&latitude=12.97&longitude=77.59`;
-      
-      const vedikaResponse = await fetch(vedikaUrl, {
-        headers: {
-          'x-api-key': vedikaKey,
-          'Content-Type': 'application/json',
-          'User-Agent': 'JJR-Storefront/1.0'
-        }
-      });
+  // Pure AI Generation Prompt
+  const aiPrompt = `You are a Hindu Panchanga assistant. Generate an accurate Daily Panchanga for the following:
+  Date: ${date}
+  Location: Bangalore, India
 
-      if (vedikaResponse.ok) {
-        finalPanchangaData = await vedikaResponse.json();
-      } else {
-        const vError = await vedikaResponse.text();
-        console.warn('Vedika API unavailable, will attempt AI estimation:', vError);
-        isAiEstimation = true;
-      }
-    }
-  } catch (error) {
-    console.warn('Vedika request failed:', error.message);
-    isAiEstimation = true;
-  }
+  Panchanga must include:
+  - Day (weekday)
+  - Tithi
+  - Nakshatra
+  - Yoga
+  - Karana
+  - Sunrise and Sunset
+  - Rahu Kalam
+  - Yamagandam
+  - Gulika Kalam
 
-  // 2. AI FORMATTING / ESTIMATION
-  const aiPrompt = isAiEstimation 
-    ? `Estimate the Hindu Panchanga details (Tithi, Nakshatra, Yoga, Karana, etc.) for Date: ${date} in Bangalore. 
-       Format it in a clean, spiritual way with blessings.`
-    : `Format this Panchanga data in a clean, structured, spiritual way with blessings. 
-       Do not change values: ${JSON.stringify(finalPanchangaData, null, 2)}`;
+  Start with a short spiritual message. Then display the Panchanga in a clean structured format using emojis. End with a short positive spiritual blessing.
+  
+  Format the response specifically for a high-end spiritual storefront. Response must be in plain text but beautifully structured.`;
 
   try {
-    // Use the OpenAI-compatible endpoint for HuggingFace (more stable)
     const hfResponse = await fetch(
       'https://api-inference.huggingface.co/v1/chat/completions',
       {
@@ -73,7 +50,7 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
         body: JSON.stringify({
           model: 'mistralai/Mistral-7B-Instruct-v0.3', 
           messages: [{ role: 'user', content: aiPrompt }],
-          max_tokens: 1000,
+          max_tokens: 1200,
           temperature: 0.7
         })
       }
@@ -81,12 +58,11 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
 
     if (!hfResponse.ok) {
       const hfErr = await hfResponse.text();
+      // Handle model loading/warming up
       if (hfResponse.status === 503) {
         return res.json({
           success: true,
-          data: isAiEstimation 
-            ? "🙏 Estimating Panchanga... (AI is warming up, please try in 30 seconds)" 
-            : `🙏 ${JSON.stringify(finalPanchangaData, null, 2)}`
+          data: "🙏 The AI Panchanga assistant is currently warming up its divine energy. Please try again in 20-30 seconds."
         });
       }
       throw new Error(`AI Service error: ${hfErr}`);
@@ -97,16 +73,15 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
 
     return res.json({
       success: true,
-      data: formattedText.trim() + (isAiEstimation ? '\n\n*(Estimated by AI - Top up Vedika for high accuracy)*' : '')
+      data: formattedText.trim()
     });
 
-  } catch (aiError) {
-    console.error('Final stage error:', aiError.message);
-    return res.json({
-      success: true,
-      data: finalPanchangaData 
-        ? `🙏 (Data Ready, Formatting Error)\n\n${JSON.stringify(finalPanchangaData, null, 2)}` 
-        : `🙏 Unable to generate Panchanga at this moment. Please check your Vedika credits.`
+  } catch (error) {
+    console.error('AI generation error:', error.message);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to generate Panchanga. Please try again later.',
+      details: error.message
     });
   }
 });
