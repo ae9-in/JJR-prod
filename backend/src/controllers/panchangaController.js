@@ -39,7 +39,7 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
 
   try {
     const hfResponse = await fetch(
-      'https://api-inference.huggingface.co/v1/chat/completions',
+      `https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta`,
       {
         method: 'POST',
         headers: {
@@ -48,10 +48,12 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
           'User-Agent': 'JJR-Storefront/1.0'
         },
         body: JSON.stringify({
-          model: 'mistralai/Mistral-7B-Instruct-v0.3', 
-          messages: [{ role: 'user', content: aiPrompt }],
-          max_tokens: 1200,
-          temperature: 0.7
+          inputs: `<|user|>\n${aiPrompt}</s>\n<|assistant|>\n`,
+          parameters: {
+            max_new_tokens: 1000,
+            temperature: 0.7,
+            return_full_text: false
+          }
         })
       }
     );
@@ -69,7 +71,13 @@ export const generatePanchanga = asyncHandler(async (req, res) => {
     }
 
     const hfResult = await hfResponse.json();
-    const formattedText = hfResult.choices?.[0]?.message?.content || '';
+    let formattedText = '';
+    
+    if (Array.isArray(hfResult) && hfResult.length > 0) {
+      formattedText = hfResult[0].generated_text || hfResult[0].summary_text || '';
+    } else {
+      formattedText = hfResult.generated_text || '';
+    }
 
     return res.json({
       success: true,
