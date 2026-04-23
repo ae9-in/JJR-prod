@@ -70,7 +70,7 @@ const PRODUCTS = [
   { id: 'p6', cat: 'Daily Pooja', name: 'Premium Cotton Wicks', price: 10, commission: 10, img: '/assets/products/Cotton Wicks JJ.png' }
 ];
 
-const NAV_SECTIONS = ['shop', 'about', 'subscription', 'margins'];
+const NAV_SECTIONS = ['shop', 'panchanga', 'about', 'subscription', 'margins'];
 
 // ─── NAVBAR ───────────────────────────────────────────────────────────────────
 function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: string; setActive: (s: string) => void, user: any, setAuthMode: (m: 'login' | null) => void, onLogout: () => void }) {
@@ -118,7 +118,7 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
             color: active === s ? C.gold : `${C.beige}80`,
             borderBottom: active === s ? `1px solid ${C.gold}` : '1px solid transparent',
             paddingBottom: '2px', transition: 'all 0.2s'
-          }}>{s === 'shop' ? 'Shop' : s === 'affiliate' ? 'Affiliates' : s}</button>
+          }}>{s === 'shop' ? 'Shop' : s === 'panchanga' ? 'Panchanga' : s === 'affiliate' ? 'Affiliates' : s}</button>
         ))}
         {user && (
           <button onClick={() => scrollTo('orders')} style={{
@@ -913,6 +913,7 @@ export default function App() {
         ) : (
           <>
             <HomeSection />
+            <PanchangaSection />
             <AboutSection />
             <CatalogSection user={user} setAuthMode={setAuthMode} />
             <SubscriptionSection user={user} />
