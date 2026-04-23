@@ -333,7 +333,7 @@ function PanchangaSection() {
     try {
       const parsed = parsePrompt(userMsg);
       
-      const res = await fetch('/api/panchanga', {
+      const res = await apiFetch('/panchanga', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

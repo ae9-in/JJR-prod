@@ -8,6 +8,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import verticalRoutes from './routes/verticalRoutes.js';
 import addressRoutes from './routes/addressRoutes.js';
+import panchangaRoutes from './routes/panchangaRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
 const allowedOrigins = [
@@ -50,6 +51,7 @@ app.use('/api/verticals', verticalRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/addresses', addressRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/panchanga', panchangaRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
