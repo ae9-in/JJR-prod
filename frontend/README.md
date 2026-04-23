@@ -27,6 +27,9 @@ This is a complete, production-ready subscription module for your pooja essentia
    SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
    RAZORPAY_KEY_ID=your_razorpay_key_id
    RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+   # Panchanga generation (server-side)
+   ASTROLOGY_API_KEY=your_freeastro_api_key
+   ASTROLOGY_API_URL=https://api.freeastroapi.com/api/v1/vedic/panchang
    ```
 3. **Dependencies**:
    ```bash
