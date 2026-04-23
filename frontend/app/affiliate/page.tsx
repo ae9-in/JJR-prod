@@ -9,7 +9,13 @@ const C = {
   maroon: '#1A0303', maroonLight: '#2D0505', beige: '#E6D5B8',
   white: '#F5F0E1', success: '#10b981', error: '#ef4444'
 };
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const getDefaultApiUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl) return envUrl;
+  if (typeof window !== 'undefined') return `http://${window.location.hostname}:5050/api`;
+  return 'http://localhost:5050/api';
+};
+const API_URL = getDefaultApiUrl();
 
 // ─── PRODUCTS ─────────────────────────────────────────────────────────────────
 const PRODUCTS = [
@@ -486,7 +492,7 @@ function AuthModal({ mode, setMode, onLogin }: { mode: 'login' | 'register' | nu
       onLogin(data.user);
       setMode(null);
     } catch (err: any) {
-      setError(err.message || 'Could not reach backend. Is it running on port 5000?');
+      setError(err.message || `Could not reach backend at ${API_URL}.`);
     } finally {
       setLoading(false);
     }

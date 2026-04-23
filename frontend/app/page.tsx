@@ -10,7 +10,55 @@ const C = {
   maroon: '#1A0303', maroonLight: '#2D0505', beige: '#E6D5B8',
   white: '#F5F0E1', success: '#10b981', error: '#ef4444'
 };
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+const getDefaultApiUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl) return envUrl;
+  if (typeof window !== 'undefined') return `http://${window.location.hostname}:5050/api`;
+  return 'http://localhost:5050/api';
+};
+const API_URL = getDefaultApiUrl();
+const API_STORAGE_KEY = 'jj_working_api_url_v2';
+const API_CANDIDATES = Array.from(
+  new Set(
+    [API_URL, 'http://localhost:5050/api', 'http://127.0.0.1:5050/api']
+      .filter(Boolean)
+      .map((url) => url.replace(/\/$/, ''))
+  )
+);
+
+const fetchWithTimeout = async (url: string, init: RequestInit = {}, timeoutMs = 6000) => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
+const apiFetch = async (path: string, init: RequestInit = {}) => {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const storedBase = typeof window !== 'undefined' ? localStorage.getItem(API_STORAGE_KEY) : null;
+  const candidates = storedBase
+    ? [storedBase, ...API_CANDIDATES.filter((base) => base !== storedBase)]
+    : API_CANDIDATES;
+
+  let lastError: unknown = null;
+
+  for (const base of candidates) {
+    try {
+      const response = await fetchWithTimeout(`${base}${normalizedPath}`, init);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(API_STORAGE_KEY, base);
+      }
+      return response;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error('Unable to reach backend API.');
+};
 
 // ─── PRODUCTS ─────────────────────────────────────────────────────────────────
 const PRODUCTS = [
@@ -111,7 +159,7 @@ function AuthModal({ mode, setMode, onLogin }: { mode: 'login' | 'register' | nu
     try {
       const endpoint = mode === 'login' ? '/auth/login' : '/auth/register';
       const bodyPayload = mode === 'register' ? { ...form, role: 'USER' } : form;
-      const res = await fetch(`${API_URL}${endpoint}`, {
+      const res = await apiFetch(endpoint, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyPayload)
       });
@@ -127,7 +175,7 @@ function AuthModal({ mode, setMode, onLogin }: { mode: 'login' | 'register' | nu
       onLogin(data.user);
       setMode(null);
     } catch (err: any) {
-      setError(err.message || 'Could not reach backend. Is it running on port 5000?');
+      setError(err.message || `Could not reach backend at ${API_URL}.`);
     } finally {
       setLoading(false);
     }
@@ -226,6 +274,258 @@ function HomeSection() {
 }
 
 
+// ─── PANCHANGA AI ASSISTANT ───────────────────────────────────────────────────
+function PanchangaSection() {
+  const [messages, setMessages] = useState<{role: string; content: string}[]>([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const chatEndRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const parsePrompt = (message: string) => {
+    const text = message.trim();
+    const now = new Date();
+    let targetDate = new Date(now);
+
+    if (/\btomorrow\b/i.test(text)) {
+      targetDate.setDate(targetDate.getDate() + 1);
+    } else if (/\byesterday\b/i.test(text)) {
+      targetDate.setDate(targetDate.getDate() - 1);
+    }
+
+    const isoDate = targetDate.toISOString().split('T')[0];
+    const inMatch = text.match(/\bin\s+([a-zA-Z\s.,-]+)$/i);
+    const forMatch = text.match(/\bfor\s+([a-zA-Z\s.,-]+)$/i);
+    let location = inMatch?.[1] || forMatch?.[1] || text;
+
+    location = location
+      .replace(/\bpanchanga\b/gi, '')
+      .replace(/\btoday\b/gi, '')
+      .replace(/\btomorrow\b/gi, '')
+      .replace(/\byesterday\b/gi, '')
+      .replace(/\bfor\b/gi, '')
+      .trim()
+      .replace(/\s{2,}/g, ' ');
+
+    if (!location) location = 'Bangalore';
+
+    return { date: isoDate, location };
+  };
+
+  const sendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || loading) return;
+
+    const userMsg = input.trim();
+    setInput('');
+    const newMessages = [...messages, { role: 'user', content: userMsg }];
+    setMessages(newMessages);
+    setLoading(true);
+
+    try {
+      const parsed = parsePrompt(userMsg);
+      
+      const res = await apiFetch('/panchanga', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          date: parsed.date,
+          location: parsed.location
+        })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        setMessages([...newMessages, { role: 'assistant', content: data.data }]);
+      } else {
+        setMessages([...newMessages, { role: 'assistant', content: `🙏 ${data.message || 'Something went wrong.'}` }]);
+      }
+    } catch (err: any) {
+      setMessages([...newMessages, { role: 'assistant', content: '🙏 Unable to reach the Panchanga service. Please ensure the backend is running.' }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const quickQueries = [
+    `Panchanga for today in Bangalore`,
+    `Today's Panchanga for Hyderabad`,
+    `Panchanga for tomorrow in Chennai`
+  ];
+
+  return (
+    <section id="panchanga" style={{ padding: '80px 40px 120px', maxWidth: '900px', margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 24px', border: `1px solid ${C.gold}33`, borderRadius: '100px', background: `${C.gold}11`, marginBottom: '24px' }}>
+          <span style={{ fontSize: '14px' }}>🪔</span>
+          <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', fontWeight: 600 }}>AI Powered</span>
+        </div>
+        <h2 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, color: C.white, marginBottom: '16px', lineHeight: 1.1 }}>
+          Daily <span style={{ fontStyle: 'italic', background: `linear-gradient(135deg, ${C.goldDark}, ${C.goldLight})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' as any }}>Panchanga</span>
+        </h2>
+        <div style={{ width: '60px', height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`, margin: '0 auto 20px' }} />
+        <p style={{ fontSize: '16px', opacity: 0.6, maxWidth: '550px', margin: '0 auto', lineHeight: 1.7, fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>
+          Ask for your daily Panchanga — Tithi, Nakshatra, Yoga, Karana, Rahu Kalam and more. Powered by AI.
+        </p>
+      </div>
+
+      {/* Chat Container */}
+      <div style={{
+        background: 'rgba(26,3,3,0.85)', border: `1.5px solid ${C.gold}33`,
+        borderRadius: '24px', overflow: 'hidden',
+        boxShadow: `0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 ${C.gold}15`,
+        backdropFilter: 'blur(20px)'
+      }}>
+        {/* Chat Header */}
+        <div style={{
+          padding: '20px 28px', borderBottom: `1px solid ${C.gold}22`,
+          display: 'flex', alignItems: 'center', gap: '14px',
+          background: `linear-gradient(135deg, rgba(142,108,39,0.15), rgba(26,3,3,0.9))`
+        }}>
+          <div style={{
+            width: 42, height: 42, borderRadius: '50%',
+            background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '20px', boxShadow: `0 4px 15px ${C.gold}40`
+          }}>
+            <span style={{ filter: 'drop-shadow(0 0 1px white) brightness(1.2)' }}>🕉️</span>
+          </div>
+          <div>
+            <div style={{ fontSize: '15px', fontWeight: 700, color: C.white, letterSpacing: '0.05em' }}>Panchanga Assistant</div>
+            <div style={{ fontSize: '11px', color: C.gold, opacity: 0.7, fontFamily: 'Inter,sans-serif' }}>Hindu Calendar • AI Powered</div>
+          </div>
+          <div style={{ marginLeft: 'auto', width: 8, height: 8, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
+        </div>
+
+        {/* Messages Area */}
+        <div style={{
+          minHeight: '320px', maxHeight: '480px', overflowY: 'auto',
+          padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: '16px'
+        }}>
+          {messages.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+              <div style={{ fontSize: '48px', marginBottom: '20px', filter: 'drop-shadow(0 0 2px rgba(197,160,89,0.5))' }}>🪔</div>
+              <p style={{ fontSize: '15px', color: C.beige, opacity: 0.7, marginBottom: '28px', fontFamily: 'Inter,sans-serif', lineHeight: 1.6 }}>
+                Namaste! Ask me for your daily Panchanga.<br />Provide a date and city to get started.
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
+                {quickQueries.map((q, i) => (
+                  <button key={i} onClick={() => { setInput(q); }} style={{
+                    background: `${C.gold}11`, border: `1px solid ${C.gold}33`,
+                    borderRadius: '100px', padding: '10px 20px', color: C.gold,
+                    fontSize: '12px', fontFamily: 'Inter,sans-serif', cursor: 'pointer',
+                    transition: 'all 0.2s', fontWeight: 500
+                  }}>{q}</button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {messages.map((msg, i) => (
+            <div key={i} style={{
+              display: 'flex',
+              justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
+              animation: 'fadeIn 0.3s ease'
+            }}>
+              <div style={{
+                maxWidth: '85%',
+                padding: '14px 20px',
+                borderRadius: msg.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                background: msg.role === 'user'
+                  ? `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`
+                  : 'rgba(45,5,5,0.9)',
+                color: msg.role === 'user' ? C.maroon : C.beige,
+                fontSize: '14px', lineHeight: 1.7,
+                fontFamily: 'Inter,sans-serif',
+                fontWeight: msg.role === 'user' ? 600 : 400,
+                border: msg.role === 'user' ? 'none' : `1px solid ${C.gold}22`,
+                whiteSpace: 'pre-wrap',
+                boxShadow: msg.role === 'user' ? `0 4px 15px ${C.gold}30` : 'none'
+              }}>
+                {msg.content}
+              </div>
+            </div>
+          ))}
+
+          {loading && (
+            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+              <div style={{
+                padding: '16px 24px', borderRadius: '18px 18px 18px 4px',
+                background: 'rgba(45,5,5,0.9)', border: `1px solid ${C.gold}22`,
+                display: 'flex', alignItems: 'center', gap: '8px'
+              }}>
+                <span style={{ fontSize: '14px', color: C.gold, opacity: 0.8 }}>🙏</span>
+                <span style={{ fontSize: '13px', color: C.beige, opacity: 0.7, fontFamily: 'Inter,sans-serif' }}>Consulting the stars...</span>
+                <span style={{ display: 'inline-flex', gap: '4px' }}>
+                  {[0, 1, 2].map(d => (
+                    <span key={d} style={{
+                      width: 6, height: 6, borderRadius: '50%', background: C.gold,
+                      opacity: 0.6, animation: `pulse 1.2s ease-in-out ${d * 0.2}s infinite`
+                    }} />
+                  ))}
+                </span>
+              </div>
+            </div>
+          )}
+          <div ref={chatEndRef} />
+        </div>
+
+        {/* Input Area */}
+        <form onSubmit={sendMessage} style={{
+          padding: '16px 20px', borderTop: `1px solid ${C.gold}22`,
+          display: 'flex', gap: '12px', alignItems: 'center',
+          background: 'rgba(26,3,3,0.6)'
+        }}>
+          <input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            placeholder="Ask for Panchanga — e.g., 'Today in Bangalore'"
+            disabled={loading}
+            style={{
+              flex: 1, padding: '14px 20px', borderRadius: '100px',
+              background: 'rgba(45,5,5,0.8)', border: `1px solid ${C.gold}33`,
+              color: C.white, outline: 'none', fontSize: '14px',
+              fontFamily: 'Inter,sans-serif', transition: 'border-color 0.2s'
+            }}
+          />
+          <button type="submit" disabled={loading || !input.trim()} style={{
+            background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`,
+            border: 'none', borderRadius: '50%', width: 48, height: 48,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
+            opacity: loading || !input.trim() ? 0.5 : 1,
+            transition: 'all 0.2s', fontSize: '18px',
+            boxShadow: `0 4px 15px ${C.gold}30`, flexShrink: 0
+          }}>
+            <span style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3)) contrast(1.2) brightness(1.2)' }}>🙏</span>
+          </button>
+        </form>
+      </div>
+
+      {/* CSS Animation */}
+      <style>{`
+        @keyframes pulse {
+          0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+          40% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+
 // ─── ABOUT ────────────────────────────────────────────────────────────────────
 function AboutSection() {
   return (
@@ -262,7 +562,7 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
   const [processingProduct, setProcessingProduct] = useState<string | null>(null);
   
   useEffect(() => {
-    fetch(`${API_URL}/products`).then(r => r.json()).then(d => {
+    apiFetch('/products').then(r => r.json()).then(d => {
       if (d.products && d.products.length > 0) {
         setProducts(d.products.map((p: any) => ({
           id: p._id, cat: p.category || 'Incense & Resins', name: p.name, price: p.price, img: p.imageUrl || '/assets/products/Camphor JJ.png'
@@ -456,7 +756,7 @@ function AffiliateSection() {
     e.preventDefault();
     setLoading(true); setError(''); setSuccess(false);
     try {
-      const res = await fetch(`${API_URL}/auth/register`, {
+      const res = await apiFetch('/auth/register', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, role: 'AFFILIATE' })
       });

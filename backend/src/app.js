@@ -23,6 +23,8 @@ app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin) return callback(null, true);
+      // In development, allow any origin to simplify local + LAN testing.
+      if (env.nodeEnv !== 'production') return callback(null, true);
       const normalizedOrigin = origin.replace(/\/$/, '');
       if (allowedOrigins.includes(normalizedOrigin)) {
         callback(null, origin); // Echo EXACT string back to browser
