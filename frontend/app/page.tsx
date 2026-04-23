@@ -292,16 +292,84 @@ function PanchangaSection() {
 
   const parsePrompt = (message: string) => {
     const text = message.trim();
-    const now = new Date();
-    let targetDate = new Date(now);
+    const pad = (value: number) => String(value).padStart(2, '0');
+    const toIsoDate = (year: number, month: number, day: number) => {
+      const candidate = new Date(year, month - 1, day);
+      if (
+        Number.isNaN(candidate.getTime()) ||
+        candidate.getFullYear() !== year ||
+        candidate.getMonth() !== month - 1 ||
+        candidate.getDate() !== day
+      ) {
+        return null;
+      }
+      return `${candidate.getFullYear()}-${pad(candidate.getMonth() + 1)}-${pad(candidate.getDate())}`;
+    };
+    const toIsoFromDate = (date: Date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 
-    if (/\btomorrow\b/i.test(text)) {
-      targetDate.setDate(targetDate.getDate() + 1);
-    } else if (/\byesterday\b/i.test(text)) {
-      targetDate.setDate(targetDate.getDate() - 1);
+    const parseExplicitDate = (rawText: string) => {
+      const normalized = rawText
+        .toLowerCase()
+        .replace(/(\d{1,2})(st|nd|rd|th)\b/g, '$1')
+        .replace(/,/g, ' ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+
+      const monthMap: Record<string, number> = {
+        jan: 1, january: 1,
+        feb: 2, february: 2,
+        mar: 3, march: 3,
+        apr: 4, april: 4,
+        may: 5,
+        jun: 6, june: 6,
+        jul: 7, july: 7,
+        aug: 8, august: 8,
+        sep: 9, sept: 9, september: 9,
+        oct: 10, october: 10,
+        nov: 11, november: 11,
+        dec: 12, december: 12
+      };
+
+      const ymd = normalized.match(/\b(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})\b/);
+      if (ymd) {
+        return toIsoDate(Number(ymd[1]), Number(ymd[2]), Number(ymd[3]));
+      }
+
+      const dmyText = normalized.match(/\b(\d{1,2})\s+([a-z]+)\s+(\d{4})\b/);
+      if (dmyText && monthMap[dmyText[2]]) {
+        return toIsoDate(Number(dmyText[3]), monthMap[dmyText[2]], Number(dmyText[1]));
+      }
+
+      const mdyText = normalized.match(/\b([a-z]+)\s+(\d{1,2})(?:\s+of)?\s+(\d{4})\b/);
+      if (mdyText && monthMap[mdyText[1]]) {
+        return toIsoDate(Number(mdyText[3]), monthMap[mdyText[1]], Number(mdyText[2]));
+      }
+
+      const slashDate = normalized.match(/\b(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})\b/);
+      if (slashDate) {
+        const first = Number(slashDate[1]);
+        const second = Number(slashDate[2]);
+        const year = Number(slashDate[3].length === 2 ? `20${slashDate[3]}` : slashDate[3]);
+        const isLikelyDayFirst = first > 12 || (first <= 12 && second <= 12);
+        const day = isLikelyDayFirst ? first : second;
+        const month = isLikelyDayFirst ? second : first;
+        return toIsoDate(year, month, day);
+      }
+
+      return null;
+    };
+
+    let isoDate = parseExplicitDate(text);
+    if (!isoDate) {
+      const targetDate = new Date();
+      if (/\btomorrow\b/i.test(text)) {
+        targetDate.setDate(targetDate.getDate() + 1);
+      } else if (/\byesterday\b/i.test(text)) {
+        targetDate.setDate(targetDate.getDate() - 1);
+      }
+      isoDate = toIsoFromDate(targetDate);
     }
 
-    const isoDate = targetDate.toISOString().split('T')[0];
     const inMatch = text.match(/\bin\s+([a-zA-Z\s.,-]+)$/i);
     const forMatch = text.match(/\bfor\s+([a-zA-Z\s.,-]+)$/i);
     let location = inMatch?.[1] || forMatch?.[1] || text;
