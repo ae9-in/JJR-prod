@@ -332,24 +332,38 @@ function PanchangaSection() {
 
     try {
       const parsed = parsePrompt(userMsg);
-      
-      const res = await apiFetch('/panchanga', {
+
+      const payload = {
+        date: parsed.date,
+        location: parsed.location
+      };
+
+      let data: any = null;
+
+      // Prefer the co-located Next.js route so Panchanga works even if backend:5050 is offline.
+      const localRes = await fetch('/api/panchanga', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          date: parsed.date,
-          location: parsed.location
-        })
+        body: JSON.stringify(payload)
       });
-      const data = await res.json();
-      
-      if (data.success) {
+      data = await localRes.json();
+
+      if (!localRes.ok || !data?.success) {
+        const backendRes = await apiFetch('/panchanga', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        data = await backendRes.json();
+      }
+
+      if (data?.success) {
         setMessages([...newMessages, { role: 'assistant', content: data.data }]);
       } else {
-        setMessages([...newMessages, { role: 'assistant', content: `🙏 ${data.message || 'Something went wrong.'}` }]);
+        setMessages([...newMessages, { role: 'assistant', content: `Sorry: ${data.message || 'Something went wrong.'}` }]);
       }
     } catch (err: any) {
-      setMessages([...newMessages, { role: 'assistant', content: '🙏 Unable to reach the Panchanga service. Please ensure the backend is running.' }]);
+      setMessages([...newMessages, { role: 'assistant', content: 'Sorry: Unable to fetch Panchanga right now. Please try again in a moment.' }]);
     } finally {
       setLoading(false);
     }
@@ -562,7 +576,7 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
   const [processingProduct, setProcessingProduct] = useState<string | null>(null);
   
   useEffect(() => {
-    apiFetch('/products').then(r => r.json()).then(d => {
+    fetch('/api/products').then(r => r.json()).then(d => {
       if (d.products && d.products.length > 0) {
         setProducts(d.products.map((p: any) => ({
           id: p._id, cat: p.category || 'Incense & Resins', name: p.name, price: p.price, img: p.imageUrl || '/assets/products/Camphor JJ.png'
@@ -930,3 +944,4 @@ export default function App() {
     </>
   );
 }
+
