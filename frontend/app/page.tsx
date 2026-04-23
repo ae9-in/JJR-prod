@@ -403,7 +403,8 @@ function PanchangaSection() {
 
       const payload = {
         date: parsed.date,
-        location: parsed.location
+        location: parsed.location,
+        query: userMsg
       };
 
       let data: any = null;

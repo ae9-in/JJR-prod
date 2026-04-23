@@ -21,6 +21,58 @@ const toIsoDate = (dateInput) => {
   return parsed.toISOString().slice(0, 10);
 };
 
+const parseDateFromQuery = (queryInput) => {
+  if (!queryInput || typeof queryInput !== 'string') return null;
+
+  const text = queryInput
+    .toLowerCase()
+    .replace(/(\d{1,2})(st|nd|rd|th)\b/g, '$1')
+    .replace(/,/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  const monthMap = {
+    jan: 1, january: 1,
+    feb: 2, february: 2,
+    mar: 3, march: 3,
+    apr: 4, april: 4,
+    may: 5,
+    jun: 6, june: 6,
+    jul: 7, july: 7,
+    aug: 8, august: 8,
+    sep: 9, sept: 9, september: 9,
+    oct: 10, october: 10,
+    nov: 11, november: 11,
+    dec: 12, december: 12
+  };
+
+  const toIsoFromParts = (year, month, day) => {
+    const candidate = new Date(year, month - 1, day);
+    if (
+      Number.isNaN(candidate.getTime()) ||
+      candidate.getFullYear() !== year ||
+      candidate.getMonth() !== month - 1 ||
+      candidate.getDate() !== day
+    ) {
+      return null;
+    }
+    const mm = String(month).padStart(2, '0');
+    const dd = String(day).padStart(2, '0');
+    return `${year}-${mm}-${dd}`;
+  };
+
+  const ymd = text.match(/\b(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})\b/);
+  if (ymd) return toIsoFromParts(Number(ymd[1]), Number(ymd[2]), Number(ymd[3]));
+
+  const dmyText = text.match(/\b(\d{1,2})\s+([a-z]+)\s+(\d{4})\b/);
+  if (dmyText && monthMap[dmyText[2]]) return toIsoFromParts(Number(dmyText[3]), monthMap[dmyText[2]], Number(dmyText[1]));
+
+  const mdyText = text.match(/\b([a-z]+)\s+(\d{1,2})(?:\s+of)?\s+(\d{4})\b/);
+  if (mdyText && monthMap[mdyText[1]]) return toIsoFromParts(Number(mdyText[3]), monthMap[mdyText[1]], Number(mdyText[2]));
+
+  return null;
+};
+
 const normalizeLocation = (locationInput) => {
   if (!locationInput || typeof locationInput !== 'string') return DEFAULT_LOCATION;
   const cleaned = locationInput
@@ -65,13 +117,15 @@ const formatPanchanga = (p, { date, location }) => {
 };
 
 export const generatePanchanga = asyncHandler(async (req, res) => {
-  const { date, location } = req.body;
+  const { date, location, query } = req.body;
+  const queryDate = parseDateFromQuery(query);
+  const effectiveDate = queryDate || date;
 
-  if (!date) {
+  if (!effectiveDate) {
     return res.status(400).json({ success: false, message: 'Date is required.' });
   }
 
-  const normalizedDate = toIsoDate(date);
+  const normalizedDate = toIsoDate(effectiveDate);
   if (!normalizedDate) {
     return res.status(400).json({ success: false, message: 'Date must be a valid ISO date.' });
   }
