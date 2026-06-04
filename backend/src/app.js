@@ -13,6 +13,8 @@ import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
 const allowedOrigins = [
   ...env.frontendUrl.split(',').map(o => o.trim().replace(/\/$/, '')),
+  'https://jayajanardhana.com',
+  'https://www.jayajanardhana.com',
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:3002'

@@ -273,6 +273,72 @@ function HomeSection() {
   );
 }
 
+// ─── REGIONAL SUPPLY & PARTNER SUPPORT ──────────────────────────────────────────
+function SupplyInfoSection() {
+  const cardStyle = {
+    background: 'rgba(26,3,3,0.95)',
+    border: `1.5px solid rgba(197,160,89,0.15)`,
+    borderRadius: '16px',
+    padding: '40px',
+    transition: 'all 0.3s ease',
+    textAlign: 'left' as const,
+    boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+  };
+
+  return (
+    <section id="supply" style={{ padding: '100px 40px 80px', maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '600px', height: '600px', background: `radial-gradient(circle, ${C.goldDark}10 0%, transparent 70%)`, pointerEvents: 'none', zIndex: 0 }} />
+      
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', marginBottom: '60px' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 24px', border: `1px solid ${C.gold}33`, borderRadius: '100px', background: `${C.gold}11`, marginBottom: '24px' }}>
+          <span style={{ fontSize: '14px', color: C.gold }}>📍</span>
+          <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', fontWeight: 600 }}>Regional Distribution</span>
+        </div>
+        <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, color: C.white, marginBottom: '20px', lineHeight: 1.15 }}>
+          Supplying Across <span style={{ fontStyle: 'italic', background: `linear-gradient(135deg, ${C.goldDark}, ${C.goldLight})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' as any }}>South India</span>
+        </h2>
+        <div style={{ width: '80px', height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}60, transparent)`, margin: '0 auto' }} />
+      </div>
+
+      <div style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
+        <div className="supply-card" style={cardStyle}>
+          <div style={{ fontSize: '36px', marginBottom: '24px', filter: 'drop-shadow(0 2px 4px rgba(197,160,89,0.3))' }}>🌐</div>
+          <h3 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '16px', color: C.white }}>Regional Coverage</h3>
+          <p style={{ fontSize: '15px', opacity: 0.8, lineHeight: 1.8, fontFamily: 'Inter,sans-serif', fontWeight: 300, color: C.beige }}>
+            Supplying across South India – Karnataka, Tamil Nadu, Kerala, Andhra Pradesh, Telangana.
+          </p>
+        </div>
+
+        <div className="supply-card" style={cardStyle}>
+          <div style={{ fontSize: '36px', marginBottom: '24px', filter: 'drop-shadow(0 2px 4px rgba(197,160,89,0.3))' }}>📈</div>
+          <h3 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '16px', color: C.white }}>Guidance & Training</h3>
+          <p style={{ fontSize: '15px', opacity: 0.8, lineHeight: 1.8, fontFamily: 'Inter,sans-serif', fontWeight: 300, color: C.beige, marginBottom: '24px' }}>
+            We provide sales strategies, product selling guidance training powered by technology, and ongoing support to help you successfully market our products and generate consistent income.
+          </p>
+          <a href="tel:8431119696" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '12px 24px', background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, borderRadius: '100px', fontSize: '13px', fontWeight: 700, textDecoration: 'none', letterSpacing: '0.05em', transition: 'transform 0.2s ease', boxShadow: `0 4px 15px ${C.gold}30` }}>
+            📞 Call: 8431119696
+          </a>
+        </div>
+
+        <div className="supply-card" style={cardStyle}>
+          <div style={{ fontSize: '36px', marginBottom: '24px', filter: 'drop-shadow(0 2px 4px rgba(197,160,89,0.3))' }}>🤝</div>
+          <h3 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '16px', color: C.white }}>Personalized Guidance</h3>
+          <p style={{ fontSize: '15px', opacity: 0.8, lineHeight: 1.8, fontFamily: 'Inter,sans-serif', fontWeight: 300, color: C.beige }}>
+            Our team will connect with you, understand your market, and, where applicable, arrange for a sales executive to meet you and explain the opportunity in detail.
+          </p>
+        </div>
+      </div>
+
+      <style>{`
+        .supply-card:hover {
+          transform: translateY(-6px);
+          border-color: ${C.gold} !important;
+          box-shadow: 0 15px 35px rgba(197,160,89,0.1) !important;
+        }
+      `}</style>
+    </section>
+  );
+}
 
 // ─── PANCHANGA TIMINGS CARD ───────────────────────────────────────────────────
 function TimingsCard({ timings, raw }: { timings: any; raw: any }) {
@@ -1038,6 +1104,7 @@ export default function App() {
         ) : (
           <>
             <HomeSection />
+            <SupplyInfoSection />
             <PanchangaSection />
             <AboutSection />
             <CatalogSection user={user} setAuthMode={setAuthMode} />

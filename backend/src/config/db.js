@@ -4,7 +4,8 @@ import { env } from './env.js';
 export const connectDb = async () => {
   try {
     await mongoose.connect(env.mongodbUri, {
-      autoIndex: true
+      autoIndex: true,
+      serverSelectionTimeoutMS: 5000
     });
     console.log('MongoDB Connected');
   } catch (error) {
