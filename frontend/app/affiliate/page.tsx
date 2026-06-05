@@ -61,12 +61,12 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '72px'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => scrollTo('home')}>
-        <div style={{ width: 32, height: 32, border: `1px solid ${C.gold}44`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 16 }}>🕯️</span>
+        <div style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img src="/assets/logo.png" alt="Jaya Janardhana Temple Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
         <div>
           <div style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.15em', color: C.gold }}>JAYA JANARDHANA</div>
-          <div style={{ fontSize: '9px', letterSpacing: '0.3em', opacity: 0.5, fontFamily: 'Inter,sans-serif', textTransform: 'uppercase', color: C.beige }}>Affiliate Portal</div>
+          <div style={{ fontSize: '9px', letterSpacing: '0.3em', opacity: 0.5, fontFamily: 'var(--font-inter-family), sans-serif', textTransform: 'uppercase', color: C.beige }}>Affiliate Portal</div>
         </div>
       </div>
 
@@ -75,7 +75,7 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
           <button key={s} onClick={() => scrollTo(s)} style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase',
-            fontFamily: 'Inter,sans-serif', fontWeight: 500,
+            fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 500,
             color: active === s ? C.gold : `${C.beige}80`,
             borderBottom: active === s ? `1px solid ${C.gold}` : '1px solid transparent',
             paddingBottom: '2px', transition: 'all 0.2s'
@@ -84,16 +84,16 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ fontSize: '11px', color: C.beige, opacity: 0.8, background: `${C.gold}11`, padding: '6px 12px', borderRadius: '100px', border: `1px solid ${C.gold}33` }}>👤 {user.name}</div>
+              <div style={{ fontSize: '11px', color: C.beige, opacity: 0.8, background: `${C.gold}11`, padding: '6px 12px', borderRadius: '100px', border: `1px solid ${C.gold}33` }}>{user.name}</div>
               <button onClick={onLogout} style={{ background: 'none', border: 'none', color: C.gold, fontSize: '10px', textTransform: 'uppercase', cursor: 'pointer', opacity: 0.7 }}>Logout</button>
             </div>
           ) : (
-            <button onClick={() => setAuthMode('login')} style={{ background: 'none', border: 'none', color: C.gold, fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Inter,sans-serif', cursor: 'pointer', fontWeight: 600 }}>Login</button>
+            <button onClick={() => setAuthMode('login')} style={{ background: 'none', border: 'none', color: C.gold, fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', cursor: 'pointer', fontWeight: 600 }}>Login</button>
           )}
           <button onClick={() => scrollTo('subscribe')} style={{
             background: 'none', border: `1px solid ${C.gold}`, padding: '8px 20px',
             color: C.gold, fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase',
-            fontFamily: 'Inter,sans-serif', cursor: 'pointer', transition: 'all 0.2s',
+            fontFamily: 'var(--font-inter-family), sans-serif', cursor: 'pointer', transition: 'all 0.2s',
             fontWeight: 600
           }}>Subscribe</button>
         </div>
@@ -110,8 +110,7 @@ function HomeSection() {
       <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%,-50%)', width: '800px', height: '800px', background: `radial-gradient(ellipse, ${C.goldDark}15 0%, transparent 70%)`, pointerEvents: 'none' }} />
 
       <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 24px', border: `1px solid ${C.gold}33`, borderRadius: '100px', background: `${C.gold}11`, marginBottom: '32px' }}>
-        <span style={{ fontSize: '12px', color: C.gold }}>🛡️</span>
-        <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', fontWeight: 600 }}>Heritage Community Marketplace</span>
+        <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 600 }}>Heritage Community Marketplace</span>
       </div>
 
       <h1 style={{ fontSize: 'clamp(48px, 8vw, 96px)', fontWeight: 900, lineHeight: 1.05, marginBottom: '24px', color: C.white }}>
@@ -126,31 +125,30 @@ function HomeSection() {
       </p>
 
       <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '80px' }}>
-        <button onClick={() => document.getElementById('subscribe')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', padding: '18px 40px', fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Inter,sans-serif', fontWeight: 700, cursor: 'pointer', borderRadius: '4px' }}>
+        <button onClick={() => document.getElementById('subscribe')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', padding: '18px 40px', fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 700, cursor: 'pointer', borderRadius: '4px' }}>
           Subscribe Now →
         </button>
-        <button onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: 'none', color: C.gold, border: `1px solid ${C.gold}66`, padding: '18px 40px', fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Inter,sans-serif', fontWeight: 600, cursor: 'pointer', borderRadius: '4px' }}>
+        <button onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: 'none', color: C.gold, border: `1px solid ${C.gold}66`, padding: '18px 40px', fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 600, cursor: 'pointer', borderRadius: '4px' }}>
           View Catalog
         </button>
       </div>
 
       <div style={{ display: 'flex', gap: '48px', opacity: 0.5, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {['🔥 Direct Sourcing', '🔔 Member Margins', '💨 Shared Logistics'].map(t => (
-          <span key={t} style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: 'Inter,sans-serif' }}>{t}</span>
+        {['Direct Sourcing', 'Member Margins', 'Shared Logistics'].map(t => (
+          <span key={t} style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif' }}>{t}</span>
         ))}
       </div>
 
       {/* Feature cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', maxWidth: '1100px', width: '100%', marginTop: '100px' }}>
         {[
-          { icon: '📈', title: 'Transparent Earnings', desc: 'Know exactly what you earn on every sacred item. Our member pricing is fixed to protect your distribution profits.', link: 'margins' },
-          { icon: '📦', title: 'Heritage Catalog', desc: 'Access verified metalware, incense, and ritual consumables sourced from master craft centers across Bharat.', link: 'catalog' },
-          { icon: '🤝', title: 'Community Trust', desc: 'Join a network of poojaris and local resellers. We succeed when our collective community thrives.', link: 'about' },
+          { title: 'Transparent Earnings', desc: 'Know exactly what you earn on every sacred item. Our member pricing is fixed to protect your distribution profits.', link: 'margins' },
+          { title: 'Heritage Catalog', desc: 'Access verified metalware, incense, and ritual consumables sourced from master craft centers across Bharat.', link: 'catalog' },
+          { title: 'Community Trust', desc: 'Join a network of poojaris and local resellers. We succeed when our collective community thrives.', link: 'about' },
         ].map((card, i) => (
           <div key={i} onClick={() => document.getElementById(card.link)?.scrollIntoView({ behavior: 'smooth' })} style={{ background: 'rgba(26,3,3,0.9)', border: `1px solid rgba(197,160,89,0.15)`, borderRadius: '16px', padding: '40px', cursor: 'pointer', transition: 'all 0.3s', textAlign: 'left' }}>
-            <div style={{ fontSize: '32px', marginBottom: '20px' }}>{card.icon}</div>
             <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px', color: C.white }}>{card.title}</h3>
-            <p style={{ fontSize: '14px', opacity: 0.6, lineHeight: 1.7, fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>{card.desc}</p>
+            <p style={{ fontSize: '14px', opacity: 0.6, lineHeight: 1.7, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300 }}>{card.desc}</p>
           </div>
         ))}
       </div>
@@ -163,24 +161,23 @@ function AboutSection() {
   return (
     <section id="about" style={{ padding: '120px 40px', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-        <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', display: 'block', marginBottom: '16px' }}>Who We Are</span>
+        <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter-family), sans-serif', display: 'block', marginBottom: '16px' }}>Who We Are</span>
         <h2 style={{ fontSize: 'clamp(36px, 5vw, 60px)', fontWeight: 900, color: C.white, marginBottom: '24px', lineHeight: 1.1 }}>A Community-First<br />Sourcing Platform.</h2>
         <div style={{ width: '60px', height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`, margin: '0 auto 32px' }} />
-        <p style={{ fontSize: '18px', opacity: 0.7, maxWidth: '680px', margin: '0 auto', lineHeight: 1.8, fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>
+        <p style={{ fontSize: '18px', opacity: 0.7, maxWidth: '680px', margin: '0 auto', lineHeight: 1.8, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300 }}>
           Jaya Janardhana is a dedicated network for sourcing high-quality spiritual products. We bridge the gap between traditional craftsmanship and independent distributors, ensuring transparency, reliable margins, and simplified logistics for everyone.
         </p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '80px' }}>
         {[
-          { icon: '🙏', title: 'Poojaris & Priests', desc: 'Source ritual materials for your daily poojas and devotee requirements directly.' },
-          { icon: '🏪', title: 'Small Shop Owners', desc: 'Stock authentic, high-quality inventory without navigating complex wholesale markets.' },
-          { icon: '💼', title: 'Independent Resellers', desc: 'Build a home-based business distributing sacred goods to your local network.' },
+          { title: 'Poojaris & Priests', desc: 'Source ritual materials for your daily poojas and devotee requirements directly.' },
+          { title: 'Small Shop Owners', desc: 'Stock authentic, high-quality inventory without navigating complex wholesale markets.' },
+          { title: 'Independent Resellers', desc: 'Build a home-based business distributing sacred goods to your local network.' },
         ].map((item, i) => (
           <div key={i} style={{ background: 'rgba(26,3,3,0.8)', border: `1px solid rgba(197,160,89,0.2)`, borderRadius: '16px', padding: '40px', textAlign: 'center' }}>
-            <div style={{ fontSize: '40px', marginBottom: '16px' }}>{item.icon}</div>
             <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px', color: C.white }}>{item.title}</h3>
-            <p style={{ fontSize: '14px', opacity: 0.6, lineHeight: 1.7, fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>{item.desc}</p>
+            <p style={{ fontSize: '14px', opacity: 0.6, lineHeight: 1.7, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300 }}>{item.desc}</p>
           </div>
         ))}
       </div>
@@ -197,8 +194,8 @@ function AboutSection() {
           ].map((s, i) => (
             <div key={i} style={{ textAlign: 'left' }}>
               <div style={{ fontSize: '48px', fontWeight: 900, color: `${C.gold}15`, lineHeight: 1, marginBottom: '8px' }}>{s.step}</div>
-              <h4 style={{ fontSize: '12px', letterSpacing: '0.2em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', fontWeight: 600, marginBottom: '8px' }}>{s.title}</h4>
-              <p style={{ fontSize: '13px', opacity: 0.6, lineHeight: 1.7, fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>{s.desc}</p>
+              <h4 style={{ fontSize: '12px', letterSpacing: '0.2em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 600, marginBottom: '8px' }}>{s.title}</h4>
+              <p style={{ fontSize: '13px', opacity: 0.6, lineHeight: 1.7, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300 }}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -230,11 +227,11 @@ function CatalogSection() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '24px', marginBottom: '60px' }}>
         <div>
           <h2 style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: C.gold, marginBottom: '8px' }}>The Collection.</h2>
-          <p style={{ fontSize: '11px', letterSpacing: '0.3em', textTransform: 'uppercase', opacity: 0.4, fontFamily: 'Inter,sans-serif' }}>Open Product Catalog</p>
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', textTransform: 'uppercase', opacity: 0.4, fontFamily: 'var(--font-inter-family), sans-serif' }}>Open Product Catalog</p>
         </div>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', background: 'rgba(26,3,3,0.8)', padding: '8px', border: `1px solid rgba(197,160,89,0.15)`, borderRadius: '8px' }}>
           {cats.map(c => (
-            <button key={c} onClick={() => setFilter(c)} style={{ background: filter === c ? `linear-gradient(135deg, ${C.goldDark}, ${C.gold})` : 'none', border: 'none', color: filter === c ? C.maroon : `${C.beige}60`, padding: '8px 16px', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'Inter,sans-serif', fontWeight: filter === c ? 700 : 400, cursor: 'pointer', borderRadius: '4px', transition: 'all 0.2s' }}>{c}</button>
+            <button key={c} onClick={() => setFilter(c)} style={{ background: filter === c ? `linear-gradient(135deg, ${C.goldDark}, ${C.gold})` : 'none', border: 'none', color: filter === c ? C.maroon : `${C.beige}60`, padding: '8px 16px', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: filter === c ? 700 : 400, cursor: 'pointer', borderRadius: '4px', transition: 'all 0.2s' }}>{c}</button>
           ))}
         </div>
       </div>
@@ -243,11 +240,11 @@ function CatalogSection() {
         {filtered.map(p => (
           <div key={p.id} style={{ background: 'rgba(26,3,3,0.9)', border: `1px solid rgba(197,160,89,0.15)`, borderRadius: '12px', overflow: 'hidden', transition: 'all 0.3s' }}>
             <div style={{ height: '220px', width: '100%', overflow: 'hidden', position: 'relative', background: 'rgba(255,255,255,0.02)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src={p.img} alt={p.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-              <div style={{ position: 'absolute', top: '12px', right: '12px', background: `${C.gold}`, color: C.maroon, padding: '4px 10px', fontSize: '10px', fontWeight: 700, fontFamily: 'Inter,sans-serif', borderRadius: '100px' }}>{p.commission}% margin</div>
+              <img src={p.img} alt={p.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} loading="lazy" fetchPriority="low" />
+              <div style={{ position: 'absolute', top: '12px', right: '12px', background: `${C.gold}`, color: C.maroon, padding: '4px 10px', fontSize: '10px', fontWeight: 700, fontFamily: 'var(--font-inter), sans-serif', borderRadius: '100px' }}>{p.commission}% margin</div>
             </div>
             <div style={{ padding: '24px' }}>
-              <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', marginBottom: '8px', opacity: 0.7 }}>{p.cat}</div>
+              <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter), sans-serif', marginBottom: '8px', opacity: 0.7 }}>{p.cat}</div>
               <h3 style={{ fontSize: '17px', fontWeight: 700, marginBottom: '12px', color: C.white }}>{p.name}</h3>
               <div style={{ fontSize: '22px', fontWeight: 700, color: C.gold }}>₹{p.price.toLocaleString('en-IN')}</div>
             </div>
@@ -266,22 +263,22 @@ function MarginsSection() {
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
           <h2 style={{ fontSize: 'clamp(36px, 5vw, 60px)', fontWeight: 900, color: C.white, marginBottom: '16px' }}>How You Earn as a<br />Jaya Janardhana Affiliate</h2>
           <div style={{ width: '60px', height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`, margin: '0 auto 24px' }} />
-          <p style={{ fontSize: '18px', opacity: 0.7, maxWidth: '600px', margin: '0 auto', fontFamily: 'Inter,sans-serif', fontWeight: 300, lineHeight: 1.8 }}>Earn up to 35% commission on verified pooja and spiritual products through transparent member pricing.</p>
+          <p style={{ fontSize: '18px', opacity: 0.7, maxWidth: '600px', margin: '0 auto', fontFamily: 'var(--font-inter), sans-serif', fontWeight: 300, lineHeight: 1.8 }}>Earn up to 25–30% commission on verified pooja and spiritual products through transparent member pricing.</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '60px', alignItems: 'center', marginBottom: '60px', flexWrap: 'wrap' as any }}>
           <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {['Affiliates earn 30–35% commission per product', 'Margins are fixed and visible before ordering', 'No hidden fees or changing rates', 'Earnings depend on product category and quantity'].map((p, i) => (
+            {['Affiliates earn 25–30% commission per product', 'Margins are fixed and visible before ordering', 'No hidden fees or changing rates', 'Earnings depend on product category and quantity'].map((p, i) => (
               <li key={i} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                 <span style={{ color: C.gold, fontSize: '16px' }}>✦</span>
-                <span style={{ fontSize: '16px', opacity: 0.8, fontFamily: 'Inter,sans-serif', fontWeight: 300, lineHeight: 1.6 }}>{p}</span>
+                <span style={{ fontSize: '16px', opacity: 0.8, fontFamily: 'var(--font-inter), sans-serif', fontWeight: 300, lineHeight: 1.6 }}>{p}</span>
               </li>
             ))}
           </ul>
           <div style={{ background: 'rgba(45,5,5,0.5)', border: `1px solid rgba(197,160,89,0.3)`, borderRadius: '16px', padding: '48px', textAlign: 'center', minWidth: '220px' }}>
-            <span style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', opacity: 0.5, fontFamily: 'Inter,sans-serif', display: 'block', marginBottom: '16px' }}>Flat Performance Rate</span>
-            <div style={{ fontSize: '80px', fontWeight: 900, color: C.gold, lineHeight: 1 }}>35%</div>
-            <span style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', display: 'block', marginTop: '12px' }}>Average Commission</span>
+            <span style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', opacity: 0.5, fontFamily: 'var(--font-inter), sans-serif', display: 'block', marginBottom: '16px' }}>Flat Performance Rate</span>
+            <div style={{ fontSize: '64px', fontWeight: 900, color: C.gold, lineHeight: 1 }}>25–30%</div>
+            <span style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter), sans-serif', display: 'block', marginTop: '12px' }}>Average Commission</span>
           </div>
         </div>
 
@@ -289,15 +286,15 @@ function MarginsSection() {
         <div style={{ background: 'rgba(45,5,5,0.6)', border: `1px solid rgba(197,160,89,0.2)`, borderRadius: '16px', padding: '40px' }}>
           <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '32px', color: C.white }}>📊 Real Earning Example</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '24px', textAlign: 'center' }}>
-            {[{ label: 'Product', value: 'Brass Deepam' }, { label: 'Member Price', value: '₹650' }, { label: 'Selling Price', value: '₹1,000' }].map((item, i) => (
+            {[{ label: 'Product', value: 'Brass Deepam' }, { label: 'Member Price', value: '₹700 – ₹750' }, { label: 'Selling Price', value: '₹1,000' }].map((item, i) => (
               <div key={i}>
-                <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', opacity: 0.4, fontFamily: 'Inter,sans-serif', marginBottom: '8px' }}>{item.label}</div>
+                <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', opacity: 0.4, fontFamily: 'var(--font-inter), sans-serif', marginBottom: '8px' }}>{item.label}</div>
                 <div style={{ fontSize: '20px', fontWeight: 700, color: C.white }}>{item.value}</div>
               </div>
             ))}
             <div style={{ background: `rgba(197,160,89,0.1)`, borderLeft: `1px solid rgba(197,160,89,0.3)`, padding: '16px', borderRadius: '8px' }}>
-              <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', marginBottom: '8px' }}>Affiliate Earnings</div>
-              <div style={{ fontSize: '28px', fontWeight: 900, color: C.gold }}>₹350 <span style={{ fontSize: '14px', opacity: 0.6, fontWeight: 400 }}>(35%)</span></div>
+              <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter), sans-serif', marginBottom: '8px' }}>Affiliate Earnings</div>
+              <div style={{ fontSize: '24px', fontWeight: 900, color: C.gold }}>₹250 – ₹300 <span style={{ fontSize: '12px', opacity: 0.6, fontWeight: 400 }}>(25–30%)</span></div>
             </div>
           </div>
         </div>
@@ -363,18 +360,18 @@ function SubscribeSection({ user, setAuthMode }: { user: any, setAuthMode: (m: '
     <section id="subscribe" style={{ padding: '120px 40px', textAlign: 'center', position: 'relative' }}>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
 
-      <span style={{ fontSize: '10px', letterSpacing: '0.3em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', display: 'block', marginBottom: '16px' }}>✦ Jaya Janardhana Membership ✦</span>
+      <span style={{ fontSize: '10px', letterSpacing: '0.3em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter), sans-serif', display: 'block', marginBottom: '16px' }}>✦ Jaya Janardhana Membership ✦</span>
       <h2 style={{ fontSize: 'clamp(40px, 6vw, 72px)', fontWeight: 900, marginBottom: '16px', color: C.white, lineHeight: 1.05 }}>
         We grow when<br />
         <span style={{ fontStyle: 'italic', background: `linear-gradient(135deg, ${C.goldDark}, ${C.goldLight})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' as any }}>you grow.</span>
       </h2>
-      <p style={{ fontSize: '16px', opacity: 0.5, fontStyle: 'italic', maxWidth: '560px', margin: '0 auto 16px', fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>Join a trusted ecosystem where sourcing is reliable, earnings are clear, and the sanctity of every product is guaranteed.</p>
+      <p style={{ fontSize: '16px', opacity: 0.5, fontStyle: 'italic', maxWidth: '560px', margin: '0 auto 16px', fontFamily: 'var(--font-inter), sans-serif', fontWeight: 300 }}>Join a trusted ecosystem where sourcing is reliable, earnings are clear, and the sanctity of every product is guaranteed.</p>
 
       {/* Billing toggle */}
       {step === 'plans' && (
         <div style={{ display: 'inline-flex', background: `${C.gold}08`, border: `1px solid ${C.gold}22`, borderRadius: '100px', padding: '4px', marginBottom: '48px' }}>
           {(['monthly', 'annual'] as const).map(m => (
-            <button key={m} onClick={() => setBilling(m)} style={{ padding: '10px 28px', borderRadius: '100px', border: 'none', cursor: 'pointer', fontSize: '13px', fontFamily: 'Inter,sans-serif', fontWeight: 600, background: billing === m ? C.gold : 'transparent', color: billing === m ? C.maroon : `${C.beige}60`, transition: 'all 0.3s', textTransform: 'capitalize' }}>{m}</button>
+            <button key={m} onClick={() => setBilling(m)} style={{ padding: '10px 28px', borderRadius: '100px', border: 'none', cursor: 'pointer', fontSize: '13px', fontFamily: 'var(--font-inter), sans-serif', fontWeight: 600, background: billing === m ? C.gold : 'transparent', color: billing === m ? C.maroon : `${C.beige}60`, transition: 'all 0.3s', textTransform: 'capitalize' }}>{m}</button>
           ))}
         </div>
       )}
@@ -390,11 +387,11 @@ function SubscribeSection({ user, setAuthMode }: { user: any, setAuthMode: (m: '
                 <span style={{ fontSize: '40px', fontWeight: 700, color: C.gold }}>₹{price(plan).toLocaleString('en-IN')}</span>
                 <span style={{ opacity: 0.4, fontSize: '14px' }}>{billing === 'annual' ? '/year' : '/month'}</span>
               </div>
-              {billing === 'annual' && <div style={{ fontSize: '12px', color: C.gold, opacity: 0.7, marginBottom: '8px', fontFamily: 'Inter,sans-serif' }}>₹{plan.price}/month × 12</div>}
-              <p style={{ opacity: 0.5, fontSize: '13px', fontStyle: 'italic', borderBottom: `1px solid ${C.gold}22`, paddingBottom: '16px', marginBottom: '24px', fontFamily: 'Inter,sans-serif' }}>{plan.description}</p>
+              {billing === 'annual' && <div style={{ fontSize: '12px', color: C.gold, opacity: 0.7, marginBottom: '8px', fontFamily: 'var(--font-inter), sans-serif' }}>₹{plan.price}/month × 12</div>}
+              <p style={{ opacity: 0.5, fontSize: '13px', fontStyle: 'italic', borderBottom: `1px solid ${C.gold}22`, paddingBottom: '16px', marginBottom: '24px', fontFamily: 'var(--font-inter), sans-serif' }}>{plan.description}</p>
               <ul style={{ padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
                 {plan.features.map(f => (
-                  <li key={f} style={{ display: 'flex', gap: '12px', fontSize: '14px', fontFamily: 'Inter,sans-serif' }}>
+                  <li key={f} style={{ display: 'flex', gap: '12px', fontSize: '14px', fontFamily: 'var(--font-inter), sans-serif' }}>
                     <span style={{ color: C.gold }}>✦</span><span style={{ opacity: 0.8 }}>{f}</span>
                   </li>
                 ))}
@@ -412,12 +409,12 @@ function SubscribeSection({ user, setAuthMode }: { user: any, setAuthMode: (m: '
           <h3 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '28px', color: C.white }}>Onboarding Details</h3>
           {(['name', 'phone', 'address'] as const).map(field => (
             field === 'address'
-              ? <textarea key={field} placeholder={field === 'address' ? 'Delivery Address' : field} value={form[field]} onChange={e => setForm({ ...form, [field]: e.target.value })} style={{ width: '100%', padding: '16px', borderRadius: '12px', background: `${C.gold}08`, border: `1px solid ${C.gold}22`, color: C.beige, outline: 'none', marginBottom: '16px', fontFamily: 'Inter,sans-serif', minHeight: '100px', resize: 'vertical', boxSizing: 'border-box' }} />
-              : <input key={field} placeholder={field === 'phone' ? 'WhatsApp Number' : 'Full Name'} value={form[field]} onChange={e => setForm({ ...form, [field]: e.target.value })} style={{ width: '100%', padding: '16px', borderRadius: '12px', background: `${C.gold}08`, border: `1px solid ${C.gold}22`, color: C.beige, outline: 'none', marginBottom: '16px', fontFamily: 'Inter,sans-serif', boxSizing: 'border-box' }} />
+              ? <textarea key={field} placeholder={field === 'address' ? 'Delivery Address' : field} value={form[field]} onChange={e => setForm({ ...form, [field]: e.target.value })} style={{ width: '100%', padding: '16px', borderRadius: '12px', background: `${C.gold}08`, border: `1px solid ${C.gold}22`, color: C.beige, outline: 'none', marginBottom: '16px', fontFamily: 'var(--font-inter), sans-serif', minHeight: '100px', resize: 'vertical', boxSizing: 'border-box' }} />
+              : <input key={field} placeholder={field === 'phone' ? 'WhatsApp Number' : 'Full Name'} value={form[field]} onChange={e => setForm({ ...form, [field]: e.target.value })} style={{ width: '100%', padding: '16px', borderRadius: '12px', background: `${C.gold}08`, border: `1px solid ${C.gold}22`, color: C.beige, outline: 'none', marginBottom: '16px', fontFamily: 'var(--font-inter), sans-serif', boxSizing: 'border-box' }} />
           ))}
           {error && <div style={{ color: C.error, fontSize: '13px', background: 'rgba(239,68,68,.1)', padding: '10px 16px', borderRadius: '8px', marginBottom: '16px' }}>⚠️ {error}</div>}
           <div style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '12px', padding: '24px', border: `1px dashed ${C.gold}33`, marginBottom: '24px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px', fontFamily: 'Inter,sans-serif' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px', fontFamily: 'var(--font-inter), sans-serif' }}>
               <span>{selectedPlan.name} ({billing})</span>
               <span style={{ color: C.gold }}>₹{price(selectedPlan).toLocaleString('en-IN')}</span>
             </div>
@@ -434,7 +431,7 @@ function SubscribeSection({ user, setAuthMode }: { user: any, setAuthMode: (m: '
         <div style={{ background: 'rgba(26,3,3,0.85)', border: `1px solid rgba(197,160,89,0.25)`, borderRadius: '24px', padding: '60px', maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
           <div style={{ fontSize: '60px', marginBottom: '20px' }}>🕯️</div>
           <h3 style={{ fontSize: '20px', fontWeight: 700, color: C.white }}>Validating Your Sanctity...</h3>
-          <p style={{ opacity: 0.5, fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>Synchronizing with Jaya Janardhana ecosystem</p>
+          <p style={{ opacity: 0.5, fontFamily: 'var(--font-inter), sans-serif', fontWeight: 300 }}>Synchronizing with Jaya Janardhana ecosystem</p>
         </div>
       )}
 
@@ -442,7 +439,7 @@ function SubscribeSection({ user, setAuthMode }: { user: any, setAuthMode: (m: '
         <div style={{ background: 'rgba(26,3,3,0.85)', border: `1px solid rgba(197,160,89,0.25)`, borderRadius: '24px', padding: '60px', maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
           <div style={{ fontSize: '60px', marginBottom: '20px' }}>🪔</div>
           <h3 style={{ fontSize: '24px', fontWeight: 700, color: C.gold, marginBottom: '16px' }}>Ritual Activated!</h3>
-          <p style={{ opacity: 0.7, fontFamily: 'Inter,sans-serif', fontWeight: 300, marginBottom: '32px' }}>Welcome to the family. Your first kit is being prepared for a sacred delivery.</p>
+          <p style={{ opacity: 0.7, fontFamily: 'var(--font-inter), sans-serif', fontWeight: 300, marginBottom: '32px' }}>Welcome to the family. Your first kit is being prepared for a sacred delivery.</p>
           <button onClick={() => setStep('plans')} style={{ background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', borderRadius: '100px', padding: '16px 32px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}>Subscribe Another Plan</button>
         </div>
       )}
@@ -453,11 +450,12 @@ function SubscribeSection({ user, setAuthMode }: { user: any, setAuthMode: (m: '
 // ─── FOOTER ───────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{ padding: '60px 40px', borderTop: `1px solid rgba(197,160,89,0.1)`, textAlign: 'center' }}>
+    <footer style={{ padding: '60px 40px', borderTop: `1px solid rgba(197,160,89,0.1)`, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <img src="/assets/logo.png" alt="Jaya Janardhana Temple Logo" style={{ width: '48px', height: '48px', objectFit: 'contain', marginBottom: '16px' }} loading="lazy" />
       <div style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '0.2em', color: C.gold, marginBottom: '8px' }}>JAYA JANARDHANA</div>
-      <div style={{ fontSize: '11px', opacity: 0.4, fontFamily: 'Inter,sans-serif', letterSpacing: '0.2em' }}>SACRED GOODS STOREFRONT</div>
+      <div style={{ fontSize: '11px', opacity: 0.4, fontFamily: 'var(--font-inter), sans-serif', letterSpacing: '0.2em' }}>SACRED GOODS STOREFRONT</div>
       <div style={{ height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}30, transparent)`, margin: '24px auto', maxWidth: '300px' }} />
-      <div style={{ fontSize: '12px', opacity: 0.3, fontFamily: 'Inter,sans-serif' }}>© {new Date().getFullYear()} Jaya Janardhana. Heritage Community Marketplace.</div>
+      <div style={{ fontSize: '12px', opacity: 0.3, fontFamily: 'var(--font-inter), sans-serif' }}>© {new Date().getFullYear()} Jaya Janardhana. Heritage Community Marketplace.</div>
     </footer>
   );
 }
@@ -498,13 +496,15 @@ function AuthModal({ mode, setMode, onLogin }: { mode: 'login' | 'register' | nu
     }
   };
 
-  const inputStyle = { width: '100%', padding: '16px', borderRadius: '12px', background: C.white, border: `2px solid transparent`, color: C.maroon, outline: 'none', marginBottom: '16px', fontFamily: 'Inter,sans-serif', boxSizing: 'border-box' as 'border-box', fontWeight: 500 };
+  const inputStyle = { width: '100%', padding: '16px', borderRadius: '12px', background: C.white, border: `2px solid transparent`, color: C.maroon, outline: 'none', marginBottom: '16px', fontFamily: 'var(--font-inter-family), sans-serif', boxSizing: 'border-box' as 'border-box', fontWeight: 500 };
 
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(26,3,3,0.95)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)' }}>
       <div style={{ background: 'rgba(26,3,3,1)', border: `1px solid ${C.gold}33`, borderRadius: '24px', padding: '48px', width: '100%', maxWidth: '400px', position: 'relative' }}>
         <button onClick={() => setMode(null)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', color: C.gold, border: 'none', fontSize: '20px', cursor: 'pointer' }}>✕</button>
-        <div style={{ fontSize: '32px', marginBottom: '16px', textAlign: 'center' }}>🕯️</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="2"><path d="M12 2C12 2 19 8 19 13C19 16.866 15.866 20 12 20C8.13401 20 5 16.866 5 13C5 8 12 2 12 2Z" fill={`${C.gold}33`}/></svg>
+        </div>
         <h2 style={{ fontSize: '24px', fontWeight: 700, color: C.white, marginBottom: '24px', textAlign: 'center' }}>{mode === 'login' ? 'Affiliate Login' : 'Register Account'}</h2>
         
         {error && <div style={{ color: C.error, fontSize: '12px', background: 'rgba(239,68,68,.1)', padding: '10px', borderRadius: '8px', marginBottom: '16px' }}>{error}</div>}
@@ -583,7 +583,6 @@ function AffiliateDashboard({ user, setAuthMode }: { user: any, setAuthMode: (m:
 
       {activeTab === 'upload' && (
         <div style={{ background: 'rgba(26,3,3,0.9)', padding: '60px', borderRadius: '16px', border: `1px solid ${C.gold}33`, textAlign: 'center' }}>
-          <div style={{ fontSize: '48px', marginBottom: '24px' }}>📦</div>
           <h3 style={{ fontSize: '28px', color: C.white, marginBottom: '16px' }}>Product Upload Station</h3>
           <p style={{ opacity: 0.7, maxWidth: '500px', margin: '0 auto 32px' }}>
             Uploading your own inventory onto the platform requires an active **Distribution Membership**.

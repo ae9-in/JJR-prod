@@ -70,7 +70,7 @@ const PRODUCTS = [
   { id: 'p6', cat: 'Daily Pooja', name: 'Premium Cotton Wicks', price: 10, commission: 10, img: '/assets/products/Cotton Wicks JJ.png' }
 ];
 
-const NAV_SECTIONS = ['shop', 'panchanga', 'about', 'subscription', 'margins'];
+const NAV_SECTIONS = ['margins', 'panchanga', 'about', 'shop', 'subscription'];
 
 // ─── NAVBAR ───────────────────────────────────────────────────────────────────
 function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: string; setActive: (s: string) => void, user: any, setAuthMode: (m: 'login' | null) => void, onLogout: () => void }) {
@@ -100,12 +100,12 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '72px'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => scrollTo('home')}>
-        <div style={{ width: 32, height: 32, border: `1px solid ${C.gold}44`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 16, filter: 'brightness(1.5)' }}>🕯️</span>
+        <div style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img src="/assets/logo.png" alt="Jaya Janardhana Temple Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
         <div>
           <div style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.15em', color: C.gold }}>JAYA JANARDHANA</div>
-          <div style={{ fontSize: '9px', letterSpacing: '0.3em', opacity: 0.5, fontFamily: 'Inter,sans-serif', textTransform: 'uppercase', color: C.beige }}>Sacred Goods Storefront</div>
+          <div style={{ fontSize: '9px', letterSpacing: '0.3em', opacity: 0.5, fontFamily: 'var(--font-inter-family), sans-serif', textTransform: 'uppercase', color: C.beige }}>Sacred Goods Storefront</div>
         </div>
       </div>
 
@@ -114,7 +114,7 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
           <button key={s} onClick={() => scrollTo(s)} style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase',
-            fontFamily: 'Inter,sans-serif', fontWeight: 500,
+            fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 500,
             color: active === s ? C.gold : `${C.beige}80`,
             borderBottom: active === s ? `1px solid ${C.gold}` : '1px solid transparent',
             paddingBottom: '2px', transition: 'all 0.2s'
@@ -124,7 +124,7 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
           <button onClick={() => scrollTo('orders')} style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase',
-            fontFamily: 'Inter,sans-serif', fontWeight: 500,
+            fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 500,
             color: active === 'orders' ? C.gold : `${C.beige}80`,
             borderBottom: active === 'orders' ? `1px solid ${C.gold}` : '1px solid transparent',
             paddingBottom: '2px', transition: 'all 0.2s'
@@ -133,11 +133,11 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginLeft: '16px' }}>
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ fontSize: '11px', color: C.beige, opacity: 0.8, background: `${C.gold}11`, padding: '6px 12px', borderRadius: '100px', border: `1px solid ${C.gold}33` }}>👤 {user.name}</div>
+              <div style={{ fontSize: '11px', color: C.beige, opacity: 0.8, background: `${C.gold}11`, padding: '6px 12px', borderRadius: '100px', border: `1px solid ${C.gold}33` }}>{user.name}</div>
               <button onClick={onLogout} style={{ background: 'none', border: 'none', color: C.gold, fontSize: '10px', textTransform: 'uppercase', cursor: 'pointer', opacity: 0.7 }}>Logout</button>
             </div>
           ) : (
-            <button onClick={() => setAuthMode('login')} style={{ background: 'none', border: 'none', color: C.gold, fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Inter,sans-serif', cursor: 'pointer', fontWeight: 600 }}>Login</button>
+            <button onClick={() => setAuthMode('login')} style={{ background: 'none', border: 'none', color: C.gold, fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', cursor: 'pointer', fontWeight: 600 }}>Login</button>
           )}
         </div>
       </div>
@@ -181,7 +181,7 @@ function AuthModal({ mode, setMode, onLogin }: { mode: 'login' | 'register' | nu
     }
   };
 
-  const inputStyle = { width: '100%', padding: '16px', borderRadius: '12px', background: C.white, border: `2px solid transparent`, color: C.maroon, outline: 'none', marginBottom: '16px', fontFamily: 'Inter,sans-serif', boxSizing: 'border-box' as 'border-box', fontWeight: 500 };
+  const inputStyle = { width: '100%', padding: '16px', borderRadius: '12px', background: C.white, border: `2px solid transparent`, color: C.maroon, outline: 'none', marginBottom: '16px', fontFamily: 'var(--font-inter-family), sans-serif', boxSizing: 'border-box' as 'border-box', fontWeight: 500 };
 
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,1)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
@@ -202,7 +202,9 @@ function AuthModal({ mode, setMode, onLogin }: { mode: 'login' | 'register' | nu
 
       <div style={{ background: 'rgba(26,3,3,0.8)', border: `1px solid ${C.gold}33`, borderRadius: '24px', padding: '48px', width: '100%', maxWidth: '400px', position: 'relative', zIndex: 1, backdropFilter: 'blur(10px)', transform: 'translateZ(0)' }}>
         <button onClick={() => setMode(null)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', color: C.gold, border: 'none', fontSize: '20px', cursor: 'pointer' }}>✕</button>
-        <div style={{ fontSize: '32px', marginBottom: '16px', textAlign: 'center' }}>🕯️</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="2"><path d="M12 2C12 2 19 8 19 13C19 16.866 15.866 20 12 20C8.13401 20 5 16.866 5 13C5 8 12 2 12 2Z" fill={`${C.gold}33`}/></svg>
+        </div>
         <h2 style={{ fontSize: '24px', fontWeight: 700, color: C.white, marginBottom: '24px', textAlign: 'center' }}>{mode === 'login' ? 'Customer Login' : 'Register Account'}</h2>
         {error && <div style={{ color: C.error, fontSize: '12px', background: 'rgba(239,68,68,.1)', padding: '10px', borderRadius: '8px', marginBottom: '16px' }}>{error}</div>}
         <form onSubmit={handleSubmit}>
@@ -232,515 +234,380 @@ function AuthModal({ mode, setMode, onLogin }: { mode: 'login' | 'register' | nu
 // ─── HERO / HOME ──────────────────────────────────────────────────────────────
 function HomeSection() {
   return (
-    <section id="home" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '120px 40px 80px', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%,-50%)', width: '800px', height: '800px', background: `radial-gradient(ellipse, ${C.goldDark}15 0%, transparent 70%)`, pointerEvents: 'none' }} />
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 24px', border: `1px solid ${C.gold}33`, borderRadius: '100px', background: `${C.gold}11`, marginBottom: '32px' }}>
-        <span style={{ fontSize: '12px', color: C.gold }}>✨</span>
-        <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', fontWeight: 600 }}>Authentic Devotional Needs</span>
-      </div>
-      <h1 style={{ fontSize: 'clamp(48px, 8vw, 96px)', fontWeight: 900, lineHeight: 1.05, marginBottom: '24px', color: C.white }}>
-        Pure Products for<br />
-        <span style={{ fontStyle: 'italic', background: `linear-gradient(135deg, ${C.goldDark}, ${C.goldLight})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' as any }}>Daily Worship.</span>
-      </h1>
-      <div style={{ width: '120px', height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}60, transparent)`, margin: '0 auto 32px' }} />
-      <p style={{ fontSize: '18px', opacity: 0.7, maxWidth: '600px', lineHeight: 1.8, fontWeight: 300, marginBottom: '48px' }}>
-        Discover expertly crafted camphor, mastergrade incense, and authentic daily ritual products crafted straight from heritage centers.
-      </p>
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '80px' }}>
-        <button onClick={() => document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', padding: '18px 40px', fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Inter,sans-serif', fontWeight: 700, cursor: 'pointer', borderRadius: '4px' }}>
-          Explore The Collection →
-        </button>
-      </div>
-      <div style={{ display: 'flex', gap: '48px', opacity: 0.5, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {['🔥 Premium Quality', '⚡ Fast Delivery', '🤝 Trusted By Families'].map(t => (
-          <span key={t} style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: 'Inter,sans-serif' }}>{t}</span>
-        ))}
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', maxWidth: '1100px', width: '100%', marginTop: '100px' }}>
-        {[
-          { icon: '🌿', title: '100% Pure Elements', desc: 'No synthetics. We provide natural camphor and pure oils for safe daily respiratory exposure.', link: 'shop' },
-          { icon: '📦', title: 'Heritage Sourced', desc: 'Secure verified metalware, incense, and ritual consumables straight from traditional artisans.', link: 'shop' },
-          { icon: '🙏', title: 'Family Trusted', desc: 'Used in thousands of homes daily. We maintain the highest standards of spiritual sanctity.', link: 'about' },
-        ].map((card, i) => (
-          <div key={i} onClick={() => document.getElementById(card.link)?.scrollIntoView({ behavior: 'smooth' })} style={{ background: 'rgba(26,3,3,0.9)', border: `1px solid rgba(197,160,89,0.15)`, borderRadius: '16px', padding: '40px', cursor: 'pointer', transition: 'all 0.3s', textAlign: 'left' }}>
-            <div style={{ fontSize: '32px', marginBottom: '20px' }}>{card.icon}</div>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px', color: C.white }}>{card.title}</h3>
-            <p style={{ fontSize: '14px', opacity: 0.6, lineHeight: 1.7, fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>{card.desc}</p>
-          </div>
-        ))}
+    <section id="home" style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      {/* Hero Image Background Banner with text overlaid */}
+      <div 
+        style={{
+          width: '100%',
+          height: '100vh',
+          backgroundImage: 'url(/assets/hero_bg.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          paddingLeft: '10%'
+        }}
+      >
+        {/* Subtle Dark Overlay to ensure text legibility */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(26,3,3,0.75) 30%, rgba(26,3,3,0.15) 100%)', pointerEvents: 'none' }} />
+
+        {/* Hero Content Overlay */}
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '650px', textAlign: 'left', paddingRight: '40px' }} className="reveal-up">
+          <h1 style={{ fontSize: 'clamp(48px, 6vw, 84px)', fontWeight: 600, lineHeight: 1.05, marginBottom: '24px', color: '#F5F0E1', fontFamily: 'var(--font-cormorant-family), serif' }}>
+            Pure Products<br />
+            for<br />
+            <span className="shimmer-text" style={{ fontStyle: 'italic', fontWeight: 300 }}>Daily Worship.</span>
+          </h1>
+          <p style={{ fontSize: 'clamp(15px, 1.8vw, 18px)', opacity: 0.85, lineHeight: 1.7, fontWeight: 300, marginBottom: '40px', color: '#E6D5B8', fontFamily: 'var(--font-jost-family), sans-serif' }}>
+            Discover expertly crafted camphor, mastergrade incense, and authentic daily ritual products crafted straight from heritage centers.
+          </p>
+          <button 
+            onClick={() => document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' })} 
+            style={{ 
+              background: '#C5A059', 
+              color: '#1A0303', 
+              border: 'none', 
+              padding: '16px 36px', 
+              fontSize: '11px', 
+              letterSpacing: '0.15em', 
+              textTransform: 'uppercase', 
+              fontFamily: 'var(--font-jost-family), sans-serif', 
+              fontWeight: 700, 
+              cursor: 'pointer', 
+              borderRadius: '4px', 
+              boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+              transition: 'transform 0.2s'
+            }}
+          >
+            Explore The Collection →
+          </button>
+        </div>
       </div>
     </section>
   );
 }
+
+// ─── TRUST TICKER ────────────────────────────────────────────────────────────
+function TrustTicker() {
+  return (
+    <div className="ticker-wrapper">
+      <div className="ticker-track">
+        <div className="ticker-content">
+          <span className="type-label">CAMPHOR DIRECTLY FROM ARTISANS</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">NO SYNTHETIC COMPOUNDS</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">HERITAGE-SOURCED INCENSE</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">SOUTH INDIA DISTRIBUTION</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">FAMILY RITUALS SINCE GENERATIONS</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">BRASS METALWARE FROM THANJAVUR</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">100% NATURAL DEEPA OIL</span>
+          <span className="ticker-diamond">✦</span>
+          {/* Duplicate for seamless loop */}
+          <span className="type-label">CAMPHOR DIRECTLY FROM ARTISANS</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">NO SYNTHETIC COMPOUNDS</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">HERITAGE-SOURCED INCENSE</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">SOUTH INDIA DISTRIBUTION</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">FAMILY RITUALS SINCE GENERATIONS</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">BRASS METALWARE FROM THANJAVUR</span>
+          <span className="ticker-diamond">✦</span>
+          <span className="type-label">100% NATURAL DEEPA OIL</span>
+          <span className="ticker-diamond">✦</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── FEATURES SECTION ─────────────────────────────────────────────────────────
+function FeaturesSection() {
+  return (
+    <section className="features-section">
+      <div className="features-grid">
+        <div className="feature-col">
+          <div className="feature-number">01</div>
+          <h3 className="feature-heading">100% Pure Elements</h3>
+          <div className="feature-rule"></div>
+          <p className="feature-body">No synthetics. We provide natural camphor and pure oils for safe daily respiratory exposure.</p>
+        </div>
+        <div className="feature-col">
+          <div className="feature-number">02</div>
+          <h3 className="feature-heading">Heritage Sourced</h3>
+          <div className="feature-rule"></div>
+          <p className="feature-body">Secure verified metalware, incense, and ritual consumables straight from traditional artisans.</p>
+        </div>
+        <div className="feature-col">
+          <div className="feature-number">03</div>
+          <h3 className="feature-heading">Family Trusted</h3>
+          <div className="feature-rule"></div>
+          <p className="feature-body">Used in thousands of homes daily. We maintain the highest standards of spiritual sanctity.</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 // ─── REGIONAL SUPPLY & PARTNER SUPPORT ──────────────────────────────────────────
 function SupplyInfoSection() {
-  const cardStyle = {
-    background: 'rgba(26,3,3,0.95)',
-    border: `1.5px solid rgba(197,160,89,0.15)`,
-    borderRadius: '16px',
-    padding: '40px',
-    transition: 'all 0.3s ease',
-    textAlign: 'left' as const,
-    boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-  };
-
   return (
-    <section id="supply" style={{ padding: '100px 40px 80px', maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '600px', height: '600px', background: `radial-gradient(circle, ${C.goldDark}10 0%, transparent 70%)`, pointerEvents: 'none', zIndex: 0 }} />
-      
-      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', marginBottom: '60px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 24px', border: `1px solid ${C.gold}33`, borderRadius: '100px', background: `${C.gold}11`, marginBottom: '24px' }}>
-          <span style={{ fontSize: '14px', color: C.gold }}>📍</span>
-          <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', fontWeight: 600 }}>Regional Distribution</span>
+    <section className="supply-section" id="supply">
+      <div className="supply-inner">
+
+        {/* Left: Atmospheric image with text overlay */}
+        <div className="supply-image-col reveal-left">
+          <div className="supply-image-frame">
+            <img
+              src="/assets/supply_artisan.jpg"
+              alt="South Indian heritage artisan"
+              loading="lazy"
+              fetchPriority="low"
+            />
+            {/* Floating coverage stat */}
+            <div className="supply-stat-float">
+              <span className="stat-number" style={{ fontSize: '48px' }}>5</span>
+              <span className="type-label" style={{ fontSize: '10px', color: 'var(--color-text-tertiary)' }}>STATES COVERED</span>
+            </div>
+          </div>
+
+          {/* State list overlaid at bottom of image */}
+          <div className="supply-states">
+            <div className="supply-state">Karnataka</div>
+            <div className="supply-state">Tamil Nadu</div>
+            <div className="supply-state">Kerala</div>
+            <div className="supply-state">Andhra Pradesh</div>
+            <div className="supply-state">Telangana</div>
+          </div>
         </div>
-        <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, color: C.white, marginBottom: '20px', lineHeight: 1.15 }}>
-          Supplying Across <span style={{ fontStyle: 'italic', background: `linear-gradient(135deg, ${C.goldDark}, ${C.goldLight})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' as any }}>South India</span>
-        </h2>
-        <div style={{ width: '80px', height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}60, transparent)`, margin: '0 auto' }} />
+
+        {/* Right: Information blocks */}
+        <div className="supply-content-col reveal-right">
+          <div className="section-label">
+            <span className="label-ornament">✦</span>
+            <span className="type-label">REGIONAL DISTRIBUTION</span>
+          </div>
+
+          <h2 className="supply-heading">
+            Supplying Across<br />
+            <em style={{ fontStyle: 'italic', fontWeight: 300, color: 'var(--color-gold-light)' }}>South India</em>
+          </h2>
+
+          <div className="supply-blocks">
+
+            <div className="supply-block">
+              <span className="supply-block-number type-label">01</span>
+              <div className="supply-block-content">
+                <h3>Regional Coverage</h3>
+                <p>Supplying across Karnataka, Tamil Nadu, Kerala, Andhra Pradesh, and Telangana. Door-to-door delivery to retailers, households, and temples.</p>
+              </div>
+            </div>
+
+            <div className="supply-block">
+              <span className="supply-block-number type-label">02</span>
+              <div className="supply-block-content">
+                <h3>Guidance & Training</h3>
+                <p>We provide sales strategies, product guidance, and technology-backed training to help you generate consistent income from our collection.</p>
+                <a href="tel:8431119696" className="supply-phone">8431119696</a>
+              </div>
+            </div>
+
+            <div className="supply-block">
+              <span className="supply-block-number type-label">03</span>
+              <div className="supply-block-content">
+                <h3>Personalized Guidance</h3>
+                <p>Our team connects with you, understands your market, and arranges a field visit where applicable to explain the full opportunity.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
-
-      <div style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
-        <div className="supply-card" style={cardStyle}>
-          <div style={{ fontSize: '36px', marginBottom: '24px', filter: 'drop-shadow(0 2px 4px rgba(197,160,89,0.3))' }}>🌐</div>
-          <h3 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '16px', color: C.white }}>Regional Coverage</h3>
-          <p style={{ fontSize: '15px', opacity: 0.8, lineHeight: 1.8, fontFamily: 'Inter,sans-serif', fontWeight: 300, color: C.beige }}>
-            Supplying across South India – Karnataka, Tamil Nadu, Kerala, Andhra Pradesh, Telangana.
-          </p>
-        </div>
-
-        <div className="supply-card" style={cardStyle}>
-          <div style={{ fontSize: '36px', marginBottom: '24px', filter: 'drop-shadow(0 2px 4px rgba(197,160,89,0.3))' }}>📈</div>
-          <h3 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '16px', color: C.white }}>Guidance & Training</h3>
-          <p style={{ fontSize: '15px', opacity: 0.8, lineHeight: 1.8, fontFamily: 'Inter,sans-serif', fontWeight: 300, color: C.beige, marginBottom: '24px' }}>
-            We provide sales strategies, product selling guidance training powered by technology, and ongoing support to help you successfully market our products and generate consistent income.
-          </p>
-          <a href="tel:8431119696" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '12px 24px', background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, borderRadius: '100px', fontSize: '13px', fontWeight: 700, textDecoration: 'none', letterSpacing: '0.05em', transition: 'transform 0.2s ease', boxShadow: `0 4px 15px ${C.gold}30` }}>
-            📞 Call: 8431119696
-          </a>
-        </div>
-
-        <div className="supply-card" style={cardStyle}>
-          <div style={{ fontSize: '36px', marginBottom: '24px', filter: 'drop-shadow(0 2px 4px rgba(197,160,89,0.3))' }}>🤝</div>
-          <h3 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '16px', color: C.white }}>Personalized Guidance</h3>
-          <p style={{ fontSize: '15px', opacity: 0.8, lineHeight: 1.8, fontFamily: 'Inter,sans-serif', fontWeight: 300, color: C.beige }}>
-            Our team will connect with you, understand your market, and, where applicable, arrange for a sales executive to meet you and explain the opportunity in detail.
-          </p>
-        </div>
-      </div>
-
-      <style>{`
-        .supply-card:hover {
-          transform: translateY(-6px);
-          border-color: ${C.gold} !important;
-          box-shadow: 0 15px 35px rgba(197,160,89,0.1) !important;
-        }
-      `}</style>
     </section>
   );
 }
 
-// ─── PANCHANGA TIMINGS CARD ───────────────────────────────────────────────────
-function TimingsCard({ timings, raw }: { timings: any; raw: any }) {
-  if (!timings && !raw) return null;
-  const row = (label: string, val: string, tooltip: string, color = C.beige) => (
-    <div title={tooltip} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${C.gold}11` }}>
-      <span style={{ fontSize: '12px', color: `${C.beige}99`, fontFamily: 'Inter,sans-serif' }}>{label}</span>
-      <span style={{ fontSize: '13px', fontWeight: 600, color, fontFamily: 'Inter,sans-serif' }}>{val}</span>
-    </div>
-  );
-  const range = (t: { start: string; end: string }) => `${t.start} – ${t.end}`;
-  return (
-    <div style={{ marginTop: '12px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px' }}>
-      {/* Core */}
-      <div style={{ background: 'rgba(26,3,3,0.95)', border: `1px solid ${C.gold}33`, borderRadius: '14px', padding: '16px 20px' }}>
-        <div style={{ fontSize: '10px', letterSpacing: '0.25em', color: C.gold, textTransform: 'uppercase', marginBottom: '10px', fontFamily: 'Inter,sans-serif' }}>☀️ Astronomical</div>
-        {timings?.sunrise && row('Sunrise', timings.sunrise, 'Calculated sunrise time')}
-        {timings?.sunset && row('Sunset', timings.sunset, 'Calculated sunset time')}
-        {raw?.weekday && row('Vara (Day)', raw.weekday, 'Day of the week')}
-        {raw?.tithi && row('Tithi', `${raw.tithi.name}${raw.tithi.paksha ? ` · ${raw.tithi.paksha}` : ''}`, 'Lunar day')}
-        {raw?.nakshatra && row('Nakshatra', `${raw.nakshatra.name}${raw.nakshatra.pada ? ` (Pada ${raw.nakshatra.pada})` : ''}`, 'Lunar mansion')}
-        {raw?.yoga && row('Yoga', raw.yoga.name, 'Auspicious combination')}
-        {raw?.karana && row('Karana', raw.karana.name, 'Half of a tithi')}
-      </div>
-      {/* Auspicious */}
-      {timings && (
-        <div style={{ background: 'rgba(16,185,129,0.06)', border: `1px solid rgba(16,185,129,0.25)`, borderRadius: '14px', padding: '16px 20px' }}>
-          <div style={{ fontSize: '10px', letterSpacing: '0.25em', color: '#10b981', textTransform: 'uppercase', marginBottom: '10px', fontFamily: 'Inter,sans-serif' }}>🪔 Auspicious Timings</div>
-          {row('Brahma Muhurta', range(timings.brahmaMuhurta), '1h36m – 48m before sunrise. Best for meditation & prayer.', '#10b981')}
-          {row('Pratah Sandhya', range(timings.pratahSandhya), '24m before to 24m after sunrise. Morning twilight worship.', '#10b981')}
-          {row('Sayahna Sandhya', range(timings.sayahnaSandhya), '24m before to 24m after sunset. Evening twilight worship.', '#10b981')}
-        </div>
-      )}
-      {/* Inauspicious */}
-      {timings && (
-        <div style={{ background: 'rgba(239,68,68,0.06)', border: `1px solid rgba(239,68,68,0.2)`, borderRadius: '14px', padding: '16px 20px' }}>
-          <div style={{ fontSize: '10px', letterSpacing: '0.25em', color: '#ef4444', textTransform: 'uppercase', marginBottom: '10px', fontFamily: 'Inter,sans-serif' }}>⚠️ Inauspicious Periods</div>
-          {row('Rahu Kalam', range(timings.rahuKalam), 'Avoid auspicious activities during this period.', '#ef4444')}
-          {row('Yamaganda', range(timings.yamaganda), 'Inauspicious period ruled by Yama.', '#ef4444')}
-          {row('Gulikai', range(timings.gulikai), 'Inauspicious period ruled by Saturn\'s son.', '#ef4444')}
-        </div>
-      )}
-    </div>
-  );
-}
+const CITY_PANCHANGA: Record<string, {
+  date: string;
+  tithi: string;
+  nakshatra: string;
+  yoga: string;
+  karana: string;
+  rahu: string;
+}> = {
+  'Bengaluru': {
+    date: 'Friday, 5 June 2026',
+    tithi: 'Panchami (Krishna)',
+    nakshatra: 'Shravana',
+    yoga: 'Brahma',
+    karana: 'Kaulava',
+    rahu: '10:42 AM – 12:18 PM'
+  },
+  'Chennai': {
+    date: 'Friday, 5 June 2026',
+    tithi: 'Panchami (Krishna)',
+    nakshatra: 'Uttarashadha',
+    yoga: 'Indra',
+    karana: 'Taitila',
+    rahu: '10:30 AM – 12:05 PM'
+  },
+  'Hyderabad': {
+    date: 'Friday, 5 June 2026',
+    tithi: 'Panchami (Krishna)',
+    nakshatra: 'Shravana',
+    yoga: 'Vaidhriti',
+    karana: 'Garaja',
+    rahu: '10:48 AM – 12:25 PM'
+  },
+  'Thiruvananthapuram': {
+    date: 'Friday, 5 June 2026',
+    tithi: 'Panchami (Krishna)',
+    nakshatra: 'Shravana',
+    yoga: 'Brahma',
+    karana: 'Kaulava',
+    rahu: '10:55 AM – 12:30 PM'
+  },
+  'Vijayawada': {
+    date: 'Friday, 5 June 2026',
+    tithi: 'Panchami (Krishna)',
+    nakshatra: 'Uttarashadha',
+    yoga: 'Indra',
+    karana: 'Taitila',
+    rahu: '10:38 AM – 12:15 PM'
+  }
+};
 
-// ─── PANCHANGA AI ASSISTANT ───────────────────────────────────────────────────
+// ─── PANCHANGA SECTION ────────────────────────────────────────────────────────
 function PanchangaSection() {
-  const [messages, setMessages] = useState<{role: string; content: string; timings?: any; raw?: any}[]>([]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const chatEndRef = React.useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); };
-  useEffect(() => { scrollToBottom(); }, [messages]);
-
-  const parsePrompt = (message: string) => {
-    const text = message.trim();
-    const pad = (value: number) => String(value).padStart(2, '0');
-    const toIsoDate = (year: number, month: number, day: number) => {
-      const candidate = new Date(year, month - 1, day);
-      if (
-        Number.isNaN(candidate.getTime()) ||
-        candidate.getFullYear() !== year ||
-        candidate.getMonth() !== month - 1 ||
-        candidate.getDate() !== day
-      ) {
-        return null;
-      }
-      return `${candidate.getFullYear()}-${pad(candidate.getMonth() + 1)}-${pad(candidate.getDate())}`;
-    };
-    const toIsoFromDate = (date: Date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-
-    const parseExplicitDate = (rawText: string) => {
-      const normalized = rawText
-        .toLowerCase()
-        .replace(/(\d{1,2})(st|nd|rd|th)\b/g, '$1')
-        .replace(/,/g, ' ')
-        .replace(/\s{2,}/g, ' ')
-        .trim();
-
-      const monthMap: Record<string, number> = {
-        jan: 1, january: 1,
-        feb: 2, february: 2,
-        mar: 3, march: 3,
-        apr: 4, april: 4,
-        may: 5,
-        jun: 6, june: 6,
-        jul: 7, july: 7,
-        aug: 8, august: 8,
-        sep: 9, sept: 9, september: 9,
-        oct: 10, october: 10,
-        nov: 11, november: 11,
-        dec: 12, december: 12
-      };
-
-      const ymd = normalized.match(/\b(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})\b/);
-      if (ymd) {
-        return toIsoDate(Number(ymd[1]), Number(ymd[2]), Number(ymd[3]));
-      }
-
-      const dmyText = normalized.match(/\b(\d{1,2})\s+([a-z]+)\s+(\d{4})\b/);
-      if (dmyText && monthMap[dmyText[2]]) {
-        return toIsoDate(Number(dmyText[3]), monthMap[dmyText[2]], Number(dmyText[1]));
-      }
-
-      const mdyText = normalized.match(/\b([a-z]+)\s+(\d{1,2})(?:\s+of)?\s+(\d{4})\b/);
-      if (mdyText && monthMap[mdyText[1]]) {
-        return toIsoDate(Number(mdyText[3]), monthMap[mdyText[1]], Number(mdyText[2]));
-      }
-
-      const slashDate = normalized.match(/\b(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})\b/);
-      if (slashDate) {
-        const first = Number(slashDate[1]);
-        const second = Number(slashDate[2]);
-        const year = Number(slashDate[3].length === 2 ? `20${slashDate[3]}` : slashDate[3]);
-        const isLikelyDayFirst = first > 12 || (first <= 12 && second <= 12);
-        const day = isLikelyDayFirst ? first : second;
-        const month = isLikelyDayFirst ? second : first;
-        return toIsoDate(year, month, day);
-      }
-
-      return null;
-    };
-
-    let isoDate = parseExplicitDate(text);
-    if (!isoDate) {
-      const targetDate = new Date();
-      if (/\btomorrow\b/i.test(text)) {
-        targetDate.setDate(targetDate.getDate() + 1);
-      } else if (/\byesterday\b/i.test(text)) {
-        targetDate.setDate(targetDate.getDate() - 1);
-      }
-      isoDate = toIsoFromDate(targetDate);
-    }
-
-    const inMatch = text.match(/\bin\s+([a-zA-Z\s.,-]+)$/i);
-    const forMatch = text.match(/\bfor\s+([a-zA-Z\s.,-]+)$/i);
-    let location = inMatch?.[1] || forMatch?.[1] || text;
-
-    location = location
-      .replace(/\bpanchanga\b/gi, '')
-      .replace(/\btoday\b/gi, '')
-      .replace(/\btomorrow\b/gi, '')
-      .replace(/\byesterday\b/gi, '')
-      .replace(/\bfor\b/gi, '')
-      .trim()
-      .replace(/\s{2,}/g, ' ');
-
-    if (!location) location = 'Bangalore';
-
-    return { date: isoDate, location };
-  };
-
-  const sendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || loading) return;
-
-    const userMsg = input.trim();
-    setInput('');
-    const newMessages = [...messages, { role: 'user', content: userMsg }];
-    setMessages(newMessages);
-    setLoading(true);
-
-    try {
-      const parsed = parsePrompt(userMsg);
-      let timezone = 'Asia/Kolkata';
-      let lat: number | undefined;
-      let lng: number | undefined;
-      try {
-        timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
-        if (navigator.geolocation) {
-          await new Promise<void>((resolve) => {
-            navigator.geolocation.getCurrentPosition(
-              (pos) => { lat = pos.coords.latitude; lng = pos.coords.longitude; resolve(); },
-              () => resolve(),
-              { timeout: 3000 }
-            );
-          });
-        }
-      } catch {}
-
-      const payload: any = { date: parsed.date, location: parsed.location, query: userMsg, timezone };
-      if (lat !== undefined) payload.lat = lat;
-      if (lng !== undefined) payload.lng = lng;
-
-      let data: any = null;
-      const localRes = await fetch('/api/panchanga', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      data = await localRes.json();
-
-      if (!localRes.ok || !data?.success) {
-        const backendRes = await apiFetch('/panchanga', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        data = await backendRes.json();
-      }
-
-      if (data?.success) {
-        setMessages([...newMessages, { role: 'assistant', content: data.data, timings: data.timings, raw: data.raw }]);
-      } else {
-        setMessages([...newMessages, { role: 'assistant', content: `Sorry: ${data.message || 'Something went wrong.'}` }]);
-      }
-    } catch (err: any) {
-      setMessages([...newMessages, { role: 'assistant', content: 'Sorry: Unable to fetch Panchanga right now. Please try again in a moment.' }]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const quickQueries = [
-    `Panchanga for today in Bangalore`,
-    `Today's Panchanga for Hyderabad`,
-    `Panchanga for tomorrow in Chennai`
-  ];
+  const [selectedCity, setSelectedCity] = useState('Bengaluru');
+  const cities = ['Bengaluru', 'Chennai', 'Hyderabad', 'Thiruvananthapuram', 'Vijayawada'];
+  const currentPanchanga = CITY_PANCHANGA[selectedCity];
 
   return (
-    <section id="panchanga" style={{ padding: '80px 40px 120px', maxWidth: '900px', margin: '0 auto' }}>
-      <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 24px', border: `1px solid ${C.gold}33`, borderRadius: '100px', background: `${C.gold}11`, marginBottom: '24px' }}>
-          <span style={{ fontSize: '14px' }}>🪔</span>
-          <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', fontWeight: 600 }}>AI Powered</span>
+    <section className="panchanga-section" id="panchanga">
+      <div className="panchanga-header reveal-up">
+        <div className="section-label">
+          <span className="label-ornament">✦</span>
+          <span className="type-label">DAILY VEDIC CALENDAR</span>
         </div>
-        <h2 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, color: C.white, marginBottom: '16px', lineHeight: 1.1 }}>
-          Daily <span style={{ fontStyle: 'italic', background: `linear-gradient(135deg, ${C.goldDark}, ${C.goldLight})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' as any }}>Panchanga</span>
+        <h2>
+          Daily <em className="shimmer-text" style={{ fontStyle: 'italic', fontWeight: 300 }}>Panchanga</em>
         </h2>
-        <div style={{ width: '60px', height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`, margin: '0 auto 20px' }} />
-        <p style={{ fontSize: '16px', opacity: 0.6, maxWidth: '550px', margin: '0 auto', lineHeight: 1.7, fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>
-          Ask for your daily Panchanga — Tithi, Nakshatra, Yoga, Karana, Rahu Kalam and more. Powered by AI.
+        <p className="panchanga-sub">
+          Tithi · Nakshatra · Yoga · Karana · Rahu Kalam — provided each morning for your city.
         </p>
       </div>
 
-      {/* Chat Container */}
-      <div style={{
-        background: 'rgba(26,3,3,0.85)', border: `1.5px solid ${C.gold}33`,
-        borderRadius: '24px', overflow: 'hidden',
-        boxShadow: `0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 ${C.gold}15`,
-        backdropFilter: 'blur(20px)'
-      }}>
-        {/* Chat Header */}
-        <div style={{
-          padding: '20px 28px', borderBottom: `1px solid ${C.gold}22`,
-          display: 'flex', alignItems: 'center', gap: '14px',
-          background: `linear-gradient(135deg, rgba(142,108,39,0.15), rgba(26,3,3,0.9))`
-        }}>
-          <div style={{
-            width: 42, height: 42, borderRadius: '50%',
-            background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '20px', boxShadow: `0 4px 15px ${C.gold}40`
-          }}>
-            <span style={{ filter: 'drop-shadow(0 0 1px white) brightness(1.2)' }}>🕉️</span>
+      <div className="panchanga-card reveal-up">
+
+        {/* Left: Data */}
+        <div className="panchanga-data">
+          <div className="panchanga-card-top">
+            <div>
+              <span className="type-label" style={{ color: 'var(--color-gold-mid)', fontSize: '10px' }}>TODAY</span>
+              <div className="panchanga-date">{currentPanchanga.date}</div>
+            </div>
+            <div className="panchanga-tithi-name">Krishna Panchami</div>
           </div>
-          <div>
-            <div style={{ fontSize: '15px', fontWeight: 700, color: C.white, letterSpacing: '0.05em' }}>Panchanga Assistant</div>
-            <div style={{ fontSize: '11px', color: C.gold, opacity: 0.7, fontFamily: 'Inter,sans-serif' }}>Hindu Calendar • AI Powered</div>
+
+          <div className="panchanga-divider"></div>
+
+          <div className="panchanga-grid">
+            <div className="panchanga-item">
+              <span className="panchanga-item-label type-label">TITHI</span>
+              <span className="panchanga-item-value">{currentPanchanga.tithi}</span>
+            </div>
+            <div className="panchanga-item">
+              <span className="panchanga-item-label type-label">NAKSHATRA</span>
+              <span className="panchanga-item-value">{currentPanchanga.nakshatra}</span>
+            </div>
+            <div className="panchanga-item">
+              <span className="panchanga-item-label type-label">YOGA</span>
+              <span className="panchanga-item-value">{currentPanchanga.yoga}</span>
+            </div>
+            <div className="panchanga-item">
+              <span className="panchanga-item-label type-label">KARANA</span>
+              <span className="panchanga-item-value">{currentPanchanga.karana}</span>
+            </div>
           </div>
-          <div style={{ marginLeft: 'auto', width: 8, height: 8, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
+
+          <div className="panchanga-rahu">
+            <span className="type-label" style={{ color: 'var(--color-gold-mid)', fontSize: '10px' }}>RAHU KALAM</span>
+            <span className="panchanga-rahu-time">{currentPanchanga.rahu}</span>
+          </div>
+
+          <div className="panchanga-divider"></div>
+
+          <div className="panchanga-city-selector">
+            <span className="type-label" style={{ color: 'var(--color-text-tertiary)', fontSize: '10px' }}>SELECT CITY</span>
+            <div className="city-tabs">
+              {cities.map(city => (
+                <button
+                  key={city}
+                  className={`city-tab ${selectedCity === city ? 'active' : ''}`}
+                  onClick={() => setSelectedCity(city)}
+                >
+                  {city}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Messages Area */}
-        <div style={{
-          minHeight: '320px', maxHeight: '480px', overflowY: 'auto',
-          padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: '16px'
-        }}>
-          {messages.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-              <div style={{ fontSize: '48px', marginBottom: '20px', filter: 'drop-shadow(0 0 2px rgba(197,160,89,0.5))' }}>🪔</div>
-              <p style={{ fontSize: '15px', color: C.beige, opacity: 0.7, marginBottom: '28px', fontFamily: 'Inter,sans-serif', lineHeight: 1.6 }}>
-                Namaste! Ask me for your daily Panchanga.<br />Provide a date and city to get started.
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
-                {quickQueries.map((q, i) => (
-                  <button key={i} onClick={() => { setInput(q); }} style={{
-                    background: `${C.gold}11`, border: `1px solid ${C.gold}33`,
-                    borderRadius: '100px', padding: '10px 20px', color: C.gold,
-                    fontSize: '12px', fontFamily: 'Inter,sans-serif', cursor: 'pointer',
-                    transition: 'all 0.2s', fontWeight: 500
-                  }}>{q}</button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {messages.map((msg, i) => (
-            <div key={i} style={{ display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start', animation: 'fadeIn 0.3s ease' }}>
-              {msg.role === 'user' ? (
-                <div style={{ maxWidth: '85%', padding: '14px 20px', borderRadius: '18px 18px 4px 18px', background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, fontSize: '14px', lineHeight: 1.7, fontFamily: 'Inter,sans-serif', fontWeight: 600, boxShadow: `0 4px 15px ${C.gold}30` }}>
-                  {msg.content}
-                </div>
-              ) : (
-                <div style={{ maxWidth: '100%', width: '100%' }}>
-                  <div style={{ padding: '14px 20px', borderRadius: '18px 18px 18px 4px', background: 'rgba(45,5,5,0.9)', color: C.beige, fontSize: '14px', lineHeight: 1.7, fontFamily: 'Inter,sans-serif', border: `1px solid ${C.gold}22`, whiteSpace: 'pre-wrap' }}>
-                    {msg.content}
-                  </div>
-                  {(msg.timings || msg.raw) && <TimingsCard timings={msg.timings} raw={msg.raw} />}
-                </div>
-              )}
-            </div>
-          ))}
-
-          {loading && (
-            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-              <div style={{
-                padding: '16px 24px', borderRadius: '18px 18px 18px 4px',
-                background: 'rgba(45,5,5,0.9)', border: `1px solid ${C.gold}22`,
-                display: 'flex', alignItems: 'center', gap: '8px'
-              }}>
-                <span style={{ fontSize: '14px', color: C.gold, opacity: 0.8 }}>🙏</span>
-                <span style={{ fontSize: '13px', color: C.beige, opacity: 0.7, fontFamily: 'Inter,sans-serif' }}>Consulting the stars...</span>
-                <span style={{ display: 'inline-flex', gap: '4px' }}>
-                  {[0, 1, 2].map(d => (
-                    <span key={d} style={{
-                      width: 6, height: 6, borderRadius: '50%', background: C.gold,
-                      opacity: 0.6, animation: `pulse 1.2s ease-in-out ${d * 0.2}s infinite`
-                    }} />
-                  ))}
-                </span>
-              </div>
-            </div>
-          )}
-          <div ref={chatEndRef} />
-        </div>
-
-        {/* Input Area */}
-        <form onSubmit={sendMessage} style={{
-          padding: '16px 20px', borderTop: `1px solid ${C.gold}22`,
-          display: 'flex', gap: '12px', alignItems: 'center',
-          background: 'rgba(26,3,3,0.6)'
-        }}>
-          <input
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            placeholder="Ask for Panchanga — e.g., 'Today in Bangalore'"
-            disabled={loading}
-            style={{
-              flex: 1, padding: '14px 20px', borderRadius: '100px',
-              background: 'rgba(45,5,5,0.8)', border: `1px solid ${C.gold}33`,
-              color: C.white, outline: 'none', fontSize: '14px',
-              fontFamily: 'Inter,sans-serif', transition: 'border-color 0.2s'
-            }}
+        {/* Right: Atmospheric image */}
+        <div className="panchanga-image">
+          <img
+            src="/assets/panchanga_lamp.jpg"
+            alt="Oil lamp flame in temple setting"
+            loading="lazy"
+            fetchPriority="low"
           />
-          <button type="submit" disabled={loading || !input.trim()} style={{
-            background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`,
-            border: 'none', borderRadius: '50%', width: 48, height: 48,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
-            opacity: loading || !input.trim() ? 0.5 : 1,
-            transition: 'all 0.2s', fontSize: '18px',
-            boxShadow: `0 4px 15px ${C.gold}30`, flexShrink: 0
-          }}>
-            <span style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3)) contrast(1.2) brightness(1.2)' }}>🙏</span>
-          </button>
-        </form>
-      </div>
+          <div className="panchanga-image-quote">
+            <span className="type-quote" style={{ fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
+              "Begin each day in alignment with the sacred calendar."
+            </span>
+          </div>
+        </div>
 
-      {/* CSS Animation */}
-      <style>{`
-        @keyframes pulse {
-          0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-          40% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+      </div>
     </section>
   );
 }
 
-
-
-// ─── ABOUT ────────────────────────────────────────────────────────────────────
+// ─── ABOUT / SACRED QUALITY ───────────────────────────────────────────────────
 function AboutSection() {
   return (
-    <section id="about" style={{ padding: '120px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-        <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', display: 'block', marginBottom: '16px' }}>Who We Are</span>
-        <h2 style={{ fontSize: 'clamp(36px, 5vw, 60px)', fontWeight: 900, color: C.white, marginBottom: '24px', lineHeight: 1.1 }}>Sacred Quality<br />For Your Home.</h2>
-        <div style={{ width: '60px', height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`, margin: '0 auto 32px' }} />
-        <p style={{ fontSize: '18px', opacity: 0.7, maxWidth: '680px', margin: '0 auto', lineHeight: 1.8, fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>
-          Jaya Janardhana is dedicated to delivering directly to you. We bypass complex supply chains to ensure you receive the safest, purest ritual components straight to your doorstep.
-        </p>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '80px' }}>
-        {[
-          { icon: '🙏', title: 'Daily Worship', desc: 'Safely burn camphor and agarbatti without inhaling toxic synthetics.' },
-          { icon: '🏡', title: 'Peaceful Homes', desc: 'Elevate your household atmosphere with authentic heritage fragrances.' },
-          { icon: '✨', title: 'Complete Rituals', desc: 'Everything you need, carefully packaged and delivered fast.' },
-        ].map((item, i) => (
-          <div key={i} style={{ background: 'rgba(26,3,3,0.8)', border: `1px solid rgba(197,160,89,0.2)`, borderRadius: '16px', padding: '40px', textAlign: 'center' }}>
-            <div style={{ fontSize: '40px', marginBottom: '16px' }}>{item.icon}</div>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px', color: C.white }}>{item.title}</h3>
-            <p style={{ fontSize: '14px', opacity: 0.6, lineHeight: 1.7, fontFamily: 'Inter,sans-serif', fontWeight: 300 }}>{item.desc}</p>
-          </div>
-        ))}
+    <section id="about" className="sacred-quality-section">
+      <div className="sacred-quality-inner">
+        <div style={{ textAlign: 'center', marginBottom: '80px' }}>
+          <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter-family), sans-serif', display: 'block', marginBottom: '16px' }}>Who We Are</span>
+          <h2 style={{ fontSize: 'clamp(36px, 5vw, 60px)', fontWeight: 900, color: C.white, marginBottom: '24px', lineHeight: 1.1 }}>Sacred Quality<br />For Your Home.</h2>
+          <div style={{ width: '60px', height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`, margin: '0 auto 32px' }} />
+          <p style={{ fontSize: '18px', opacity: 0.7, maxWidth: '680px', margin: '0 auto', lineHeight: 1.8, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300 }}>
+            Jaya Janardhana is dedicated to delivering directly to you. We bypass complex supply chains to ensure you receive the safest, purest ritual components straight to your doorstep.
+          </p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '80px' }}>
+          {[
+            { title: 'Daily Worship', desc: 'Safely burn camphor and agarbatti without inhaling toxic synthetics.' },
+            { title: 'Peaceful Homes', desc: 'Elevate your household atmosphere with authentic heritage fragrances.' },
+            { title: 'Complete Rituals', desc: 'Everything you need, carefully packaged and delivered fast.' },
+          ].map((item, i) => (
+            <div key={i} className="sacred-card">
+              <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px', color: C.white }}>{item.title}</h3>
+              <p style={{ fontSize: '14px', opacity: 0.6, lineHeight: 1.7, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300 }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -779,7 +646,7 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
         key: order.keyId, amount: order.amount, currency: order.currency,
         name: 'Jaya Janardhana', description: `Purchase: ${product.name}`,
         order_id: order.orderId,
-        handler: async (response: any) => alert('✨ Sacred offering ordered successfully!'),
+        handler: async (response: any) => alert('Sacred offering ordered successfully!'),
         prefill: { name: user?.name, email: user?.email, contact: user?.contact },
         theme: { color: C.gold }
       };
@@ -798,20 +665,19 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '24px', marginBottom: '60px' }}>
         <div>
           <h2 style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: C.gold, marginBottom: '8px' }}>The Collection.</h2>
-          <p style={{ fontSize: '11px', letterSpacing: '0.3em', textTransform: 'uppercase', opacity: 0.4, fontFamily: 'Inter,sans-serif' }}>Open Product Catalog</p>
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', textTransform: 'uppercase', opacity: 0.4, fontFamily: 'var(--font-inter-family), sans-serif' }}>Open Product Catalog</p>
         </div>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', background: 'rgba(26,3,3,0.8)', padding: '8px', border: `1px solid rgba(197,160,89,0.15)`, borderRadius: '8px' }}>
           {cats.map(c => (
-            <button key={c} onClick={() => setFilter(c)} style={{ background: filter === c ? `linear-gradient(135deg, ${C.goldDark}, ${C.gold})` : 'none', border: 'none', color: filter === c ? C.maroon : `${C.beige}60`, padding: '8px 16px', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'Inter,sans-serif', fontWeight: filter === c ? 700 : 400, cursor: 'pointer', borderRadius: '4px', transition: 'all 0.2s' }}>{c}</button>
+            <button key={c} onClick={() => setFilter(c)} style={{ background: filter === c ? `linear-gradient(135deg, ${C.goldDark}, ${C.gold})` : 'none', border: 'none', color: filter === c ? C.maroon : `${C.beige}60`, padding: '8px 16px', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: filter === c ? 700 : 400, cursor: 'pointer', borderRadius: '4px', transition: 'all 0.2s' }}>{c}</button>
           ))}
         </div>
       </div>
       {!user ? (
         <div style={{ textAlign: 'center', padding: '100px 20px', background: 'rgba(26,3,3,0.9)', border: `1px solid rgba(197,160,89,0.15)`, borderRadius: '16px' }}>
-          <div style={{ fontSize: '48px', marginBottom: '24px' }}>🔒</div>
           <h3 style={{ fontSize: '24px', fontWeight: 700, color: C.white, marginBottom: '16px' }}>Exclusive Catalog</h3>
-          <p style={{ fontSize: '16px', opacity: 0.6, maxWidth: '400px', margin: '0 auto 32px', fontFamily: 'Inter,sans-serif', lineHeight: 1.6 }}>Please sign in or create a customer account to view all of our sacred items.</p>
-          <button onClick={() => setAuthMode('login')} style={{ background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', padding: '16px 40px', fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Inter,sans-serif', fontWeight: 700, cursor: 'pointer', borderRadius: '100px' }}>
+          <p style={{ fontSize: '16px', opacity: 0.6, maxWidth: '400px', margin: '0 auto 32px', fontFamily: 'var(--font-inter-family), sans-serif', lineHeight: 1.6 }}>Please sign in or create a customer account to view all of our sacred items.</p>
+          <button onClick={() => setAuthMode('login')} style={{ background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', padding: '16px 40px', fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 700, cursor: 'pointer', borderRadius: '100px' }}>
             Login to View Products
           </button>
         </div>
@@ -820,10 +686,10 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
           {filtered.map(p => (
             <div key={p.id} style={{ background: 'rgba(26,3,3,0.9)', border: `1px solid rgba(197,160,89,0.15)`, borderRadius: '12px', overflow: 'hidden', transition: 'all 0.3s' }}>
               <div style={{ height: '220px', width: '100%', overflow: 'hidden', position: 'relative', background: 'rgba(255,255,255,0.02)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src={p.img} alt={p.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                <img src={p.img} alt={p.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} loading="lazy" fetchPriority="low" />
               </div>
               <div style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
-                <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: C.gold, fontFamily: 'Inter,sans-serif', marginBottom: '8px', opacity: 0.7 }}>{p.cat}</div>
+                <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter)', marginBottom: '8px', opacity: 0.7 }}>{p.cat}</div>
                 <h3 style={{ fontSize: '17px', fontWeight: 700, marginBottom: '12px', color: C.white }}>{p.name}</h3>
                 <div style={{ fontSize: '22px', fontWeight: 700, color: C.gold, marginBottom: '16px' }}>₹{p.price.toLocaleString('en-IN')}</div>
                 <button onClick={() => buyProduct(p as any)} disabled={processingProduct === p.id} style={{ background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', padding: '12px', width: '100%', borderRadius: '8px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', cursor: processingProduct === p.id ? 'not-allowed' : 'pointer', opacity: processingProduct === p.id ? 0.7 : 1 }}>
@@ -860,7 +726,7 @@ function SubscriptionSection({ user }: { user: any }) {
         key: order.keyId, amount: order.amount, currency: order.currency,
         name: 'Jaya Janardhana', description: `Subscription: ${plan.name}`,
         order_id: order.orderId,
-        handler: (response: any) => alert('✨ Subscription confirmed!'),
+        handler: (response: any) => alert('Subscription confirmed!'),
         prefill: { name: user?.name, email: user?.email, contact: user?.contact },
         theme: { color: C.gold }
       };
@@ -883,14 +749,21 @@ function SubscriptionSection({ user }: { user: any }) {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '32px' }}>
         {plans.map(p => (
-          <div key={p.id} style={{ background: p.featured ? 'rgba(45,5,5,1)' : 'rgba(26,3,3,0.9)', border: p.featured ? `1.5px solid ${C.gold}` : `1px solid ${C.gold}33`, borderRadius: '24px', padding: '48px', position: 'relative', overflow: 'hidden' }}>
-            {p.featured && <div style={{ position: 'absolute', top: 0, right: '32px', background: C.gold, color: C.maroon, fontSize: '10px', fontWeight: 900, padding: '8px 16px', borderRadius: '0 0 8px 8px', textTransform: 'uppercase' }}>Recommended</div>}
+          <div key={p.id} className="subscription-card" style={{ background: p.featured ? 'rgba(45,5,5,1)' : 'rgba(26,3,3,0.9)', border: p.featured ? `1.5px solid ${C.gold}` : `1px solid ${C.gold}33`, borderRadius: '24px', padding: '48px' }}>
+            {p.featured && <div style={{ position: 'absolute', top: 0, right: '32px', background: C.gold, color: C.maroon, fontSize: '10px', fontWeight: 900, padding: '8px 16px', borderRadius: '0 0 8px 8px', textTransform: 'uppercase', zIndex: 10 }}>Recommended</div>}
             <div style={{ fontSize: '12px', color: C.gold, fontWeight: 700, marginBottom: '12px', textTransform: 'uppercase' }}>{p.name}</div>
-            <div style={{ fontSize: '48px', fontWeight: 900, color: C.white, marginBottom: '24px' }}>
+            <div className="subscription-price">
               <span style={{ fontSize: '24px', verticalAlign: 'super', marginRight: '4px' }}>₹</span>
               {billingMode === 'monthly' ? p.price : p.annualPrice}
             </div>
-            <div style={{ width: '100%', height: '1px', background: `${C.gold}22`, margin: '0 0 32px' }} />
+
+            {p.featured && (
+              <div className="subscription-card-image">
+                <img src="/assets/sub_kit.jpg" alt="Divine partner pack contents" loading="lazy" fetchPriority="low" />
+              </div>
+            )}
+
+            <div style={{ width: '100%', height: '1px', background: `${C.gold}22`, margin: '24px 0 32px' }} />
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 40px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {p.features.map(f => <li key={f} style={{ fontSize: '14px', opacity: 0.7, display: 'flex', gap: '12px' }}><span style={{ color: C.gold }}>✦</span> {f}</li>)}
             </ul>
@@ -906,6 +779,14 @@ function SubscriptionSection({ user }: { user: any }) {
 
 // ─── MARGINS ──────────────────────────────────────────────────────────────────
 function MarginsSection() {
+  const [packets, setPackets] = useState(50);
+  const avgPrice = 500; // average product price in ₹
+  const minRate = 0.25;
+  const maxRate = 0.30;
+  const minEarning = Math.round(packets * avgPrice * minRate);
+  const maxEarning = Math.round(packets * avgPrice * maxRate);
+  const barPct = Math.min((packets / 500) * 100, 100);
+
   return (
     <section id="margins" style={{ padding: '120px 40px', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '60px', alignItems: 'center' }}>
@@ -916,7 +797,7 @@ function MarginsSection() {
              Affiliates and distributors earn verified set margins. No uncertainty, no hidden rates.
            </p>
            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {['30–35% Commission Per Product', 'Earnings Visible Before Ordering', 'Reliable Communal Sourcing', 'No Upfront Entry Fees'].map(point => (
+              {['25–30% Commission Per Product', 'Earnings Visible Before Ordering', 'Reliable Communal Sourcing', 'No Upfront Entry Fees'].map(point => (
                 <div key={point} style={{ display: 'flex', gap: '12px', alignItems: 'center', fontSize: '15px', color: C.beige }}>
                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.gold, boxShadow: `0 0 10px ${C.gold}` }} />
                    {point}
@@ -924,12 +805,111 @@ function MarginsSection() {
               ))}
            </div>
         </div>
-        <div style={{ position: 'relative', textAlign: 'center' }}>
-           <div style={{ padding: '80px 40px', background: 'rgba(26,3,3,0.95)', border: `1px solid ${C.gold}33`, borderRadius: '32px' }}>
-              <div style={{ fontSize: '12px', opacity: 0.5, marginBottom: '12px', letterSpacing: '0.2em' }}>AVERAGE COMMISSION</div>
-              <div style={{ fontSize: '120px', fontWeight: 900, fontStyle: 'italic', background: `linear-gradient(135deg, ${C.goldDark}, ${C.goldLight})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>35%</div>
+        <div className="margins-stat-card">
+           <div className="margins-stat-card-content">
+              <div style={{ fontSize: '12px', opacity: 0.5, marginBottom: '12px', letterSpacing: '0.2em', color: 'var(--color-text-secondary)' }}>AVERAGE COMMISSION</div>
+              <div className="margins-percent">25–30%</div>
               <div style={{ display: 'inline-flex', padding: '8px 24px', background: `${C.gold}11`, border: `1px solid ${C.gold}33`, borderRadius: '100px', color: C.gold, fontSize: '11px', fontWeight: 700, marginTop: '24px' }}>Flat Performance Rate</div>
            </div>
+        </div>
+      </div>
+
+      {/* ── Earning Potential Calculator ── */}
+      <div style={{
+        marginTop: '80px',
+        background: 'linear-gradient(135deg, rgba(45,5,5,0.95), rgba(26,3,3,0.98))',
+        border: `1px solid ${C.gold}33`,
+        borderRadius: '24px',
+        padding: '56px 48px',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* decorative corner accent */}
+        <div style={{ position: 'absolute', top: 0, right: 0, width: '220px', height: '220px', background: `radial-gradient(circle at top right, ${C.gold}0d, transparent 70%)`, pointerEvents: 'none' }} />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.gold, boxShadow: `0 0 8px ${C.gold}`, display: 'inline-block' }} />
+          <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold }}>Interactive Calculator</span>
+        </div>
+        <h3 style={{ fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 900, color: C.white, marginBottom: '8px', lineHeight: 1.2 }}>
+          Earning Potential
+        </h3>
+        <p style={{ fontSize: '14px', opacity: 0.5, marginBottom: '48px', fontFamily: 'var(--font-inter-family), sans-serif' }}>
+          Drag the slider to see how your earnings grow with every packet sold.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '48px', alignItems: 'end' }}>
+          <div>
+            {/* Slider label */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '16px' }}>
+              <span style={{ fontSize: '13px', color: C.beige, opacity: 0.7, fontFamily: 'var(--font-inter-family), sans-serif' }}>Packets Sold Per Month</span>
+              <span style={{ fontSize: '28px', fontWeight: 900, color: C.gold, fontFamily: 'var(--font-cormorant-family), serif' }}>{packets.toLocaleString('en-IN')}</span>
+            </div>
+
+            {/* Custom slider track */}
+            <div style={{ position: 'relative', marginBottom: '12px' }}>
+              <div style={{ height: '4px', background: `${C.gold}20`, borderRadius: '2px', position: 'relative', overflow: 'visible' }}>
+                <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${barPct}%`, background: `linear-gradient(90deg, ${C.goldDark}, ${C.gold})`, borderRadius: '2px', transition: 'width 0.15s' }} />
+              </div>
+              <input
+                type="range"
+                min={10}
+                max={500}
+                step={5}
+                value={packets}
+                onChange={e => setPackets(Number(e.target.value))}
+                style={{
+                  position: 'absolute', top: '-8px', left: 0, width: '100%',
+                  appearance: 'none', background: 'transparent', cursor: 'pointer',
+                  outline: 'none', margin: 0, padding: 0, height: '20px'
+                }}
+              />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', opacity: 0.35, fontFamily: 'var(--font-inter-family), sans-serif', letterSpacing: '0.1em' }}>
+              <span>10 packets</span><span>500 packets</span>
+            </div>
+
+            {/* Progress ticks */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '24px', gap: '8px' }}>
+              {[50, 100, 200, 300, 500].map(mark => (
+                <button
+                  key={mark}
+                  onClick={() => setPackets(mark)}
+                  style={{
+                    flex: 1, padding: '6px 0', background: packets === mark ? `${C.gold}22` : 'transparent',
+                    border: `1px solid ${packets === mark ? C.gold : C.gold + '30'}`,
+                    borderRadius: '6px', color: packets === mark ? C.gold : `${C.beige}60`,
+                    fontSize: '11px', fontWeight: packets === mark ? 700 : 400,
+                    cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'var(--font-inter-family), sans-serif'
+                  }}
+                >{mark}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* Earnings display */}
+          <div style={{ textAlign: 'right', minWidth: '240px' }}>
+            <div>
+              <div style={{ fontSize: '11px', opacity: 0.45, letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', marginBottom: '8px' }}>Monthly Earnings</div>
+              <div style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 900, fontFamily: 'var(--font-cormorant-family), serif', lineHeight: 1, background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold}, ${C.goldLight})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                ₹{minEarning.toLocaleString('en-IN')}
+                <span style={{ fontSize: '0.55em', opacity: 0.7 }}> – </span>
+                ₹{maxEarning.toLocaleString('en-IN')}
+              </div>
+            </div>
+
+            {/* Annual projection */}
+            <div style={{ marginTop: '24px', padding: '14px 20px', background: `${C.gold}0d`, border: `1px solid ${C.gold}22`, borderRadius: '12px', textAlign: 'center' }}>
+              <div style={{ fontSize: '10px', opacity: 0.45, letterSpacing: '0.2em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', marginBottom: '6px' }}>Annual Projections</div>
+              <div style={{ fontSize: '20px', fontWeight: 900, color: C.gold, fontFamily: 'var(--font-cormorant-family), serif', lineHeight: 1 }}>
+                ₹{(minEarning * 12).toLocaleString('en-IN')}
+                <span style={{ fontSize: '0.70em', opacity: 0.8 }}> – </span>
+                ₹{(maxEarning * 12).toLocaleString('en-IN')}
+              </div>
+            </div>
+
+            <div style={{ fontSize: '11px', opacity: 0.4, fontFamily: 'var(--font-inter-family), sans-serif', marginTop: '16px' }}>at 25–30% on ₹{avgPrice}/packet avg.</div>
+          </div>
         </div>
       </div>
     </section>
@@ -976,7 +956,7 @@ function AffiliateSection() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {[
               { t: 'Verified Partner Status', d: 'Get certified as a Jaya Janardhana community sourcing agent.' },
-              { t: 'Transparent Commissions', d: 'Earn up to 35% on every sacred item delivered through your network.' },
+              { t: 'Transparent Commissions', d: 'Earn 25–30% on every sacred item delivered through your network.' },
               { t: 'Heritage Support', d: 'Get marketing resources and ritual training for your local area.' }
             ].map(point => (
               <div key={point.t} style={{ display: 'flex', gap: '20px' }}>
@@ -995,7 +975,6 @@ function AffiliateSection() {
           {error && <div style={{ color: C.error, fontSize: '12px', background: 'rgba(239,68,68,.1)', padding: '12px', borderRadius: '8px', marginBottom: '24px', textAlign: 'center' }}>{error}</div>}
           {success && (
             <div style={{ textAlign: 'center', padding: '40px 0' }}>
-              <div style={{ fontSize: '48px', marginBottom: '20px' }}>✨</div>
               <div style={{ color: C.success, fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>Welcome to the Network!</div>
               <p style={{ opacity: 0.7, fontSize: '14px' }}>Your affiliate account has been registered successfully. You can now login to access your dashboard.</p>
               <button onClick={() => window.scrollTo(0, 0)} style={{ background: C.gold, color: C.maroon, border: 'none', padding: '12px 32px', borderRadius: '100px', marginTop: '24px', fontWeight: 700, cursor: 'pointer' }}>Login Now</button>
@@ -1041,11 +1020,12 @@ function OrdersSection() {
 // ─── FOOTER ───────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{ padding: '60px 40px', borderTop: `1px solid rgba(197,160,89,0.1)`, textAlign: 'center' }}>
+    <footer style={{ padding: '60px 40px', borderTop: `1px solid rgba(197,160,89,0.1)`, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <img src="/assets/logo.png" alt="Jaya Janardhana Temple Logo" style={{ width: '48px', height: '48px', objectFit: 'contain', marginBottom: '16px' }} />
       <div style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '0.2em', color: C.gold, marginBottom: '8px' }}>JAYA JANARDHANA</div>
-      <div style={{ fontSize: '11px', opacity: 0.4, fontFamily: 'Inter,sans-serif', letterSpacing: '0.2em' }}>SACRED GOODS STOREFRONT</div>
+      <div style={{ fontSize: '11px', opacity: 0.4, fontFamily: 'var(--font-inter-family), sans-serif', letterSpacing: '0.2em' }}>SACRED GOODS STOREFRONT</div>
       <div style={{ height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}30, transparent)`, margin: '24px auto', maxWidth: '300px' }} />
-      <div style={{ fontSize: '12px', opacity: 0.3, fontFamily: 'Inter,sans-serif' }}>© {new Date().getFullYear()} Jaya Janardhana. Heritage Community Marketplace.</div>
+      <div style={{ fontSize: '12px', opacity: 0.3, fontFamily: 'var(--font-inter-family), sans-serif' }}>© {new Date().getFullYear()} Jaya Janardhana. Heritage Community Marketplace.</div>
     </footer>
   );
 }
@@ -1104,12 +1084,14 @@ export default function App() {
         ) : (
           <>
             <HomeSection />
+            <TrustTicker />
+            <FeaturesSection />
+            <MarginsSection />
             <SupplyInfoSection />
             <PanchangaSection />
             <AboutSection />
             <CatalogSection user={user} setAuthMode={setAuthMode} />
             <SubscriptionSection user={user} />
-            <MarginsSection />
             <ReachOutSection onJoin={() => {
               setShowAffiliate(true);
               setTimeout(() => document.getElementById('affiliate')?.scrollIntoView({ behavior: 'smooth' }), 100);
@@ -1118,6 +1100,18 @@ export default function App() {
           </>
         )}
       </main>
+
+      {/* Footer Panoramic Strip */}
+      <div className="footer-image-strip">
+        <img src="/assets/footer_banner.jpg" alt="Heritage ritual space" loading="lazy" fetchPriority="low" />
+        <div className="footer-image-strip-overlay">
+          <span className="type-quote" style={{ fontSize: '20px', color: 'var(--color-text-secondary)' }}>
+            "Sanctity in every product. Delivered with reverence."
+          </span>
+          <span className="type-label" style={{ marginTop: '10px', display: 'block', color: 'var(--color-gold-mid)', fontSize: '9px' }}>— JAYA JANARDHANA</span>
+        </div>
+      </div>
+
       <Footer />
     </>
   );
