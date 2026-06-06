@@ -30,8 +30,8 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  title: "Jaya Janardhana - Sacred Goods Storefront",
-  description: "Heritage Community Marketplace for Sacred Distribution",
+  title: "Jaya Janardhana | Jaya Janardana - Sacred Goods Storefront",
+  description: "Jaya Janardhana (also known as Jaya Janardana) is a heritage community marketplace for sacred distribution. Source pure camphor, deepa oil, and natural agarbatti online.",
   icons: { icon: '/favicon.svg' },
   verification: {
     google: "ZLvrsxBgeoxoLY4yZFeIRQEwbyW2kyAqdCZXeT8mqik",
@@ -54,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@context": "https://schema.org",
               "@type": "Organization",
               "name": "Jaya Janardhana",
+              "alternateName": ["Jaya Janardana", "Jaya Janardhana Storefront"],
               "url": "https://www.jayajanardhana.com",
               "logo": "https://www.jayajanardhana.com/assets/logo.png",
               "contactPoint": {
@@ -315,6 +316,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "acceptedAnswer": {
                     "@type": "Answer",
                     "text": "Yes, you can easily cancel, pause, or adjust your subscription frequency at any time through your customer profile."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How is the brand name spelled, Jaya Janardhana or Jaya Janardana?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our brand name can be transliterated as Jaya Janardhana (with 'h') or Jaya Janardana (without 'h'). Both refer to our sacred Salem-based sourcing storefront and regional South India temple distribution network."
                   }
                 }
               ]

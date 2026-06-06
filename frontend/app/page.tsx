@@ -512,8 +512,88 @@ const CITY_PANCHANGA: Record<string, {
 // ─── PANCHANGA SECTION ────────────────────────────────────────────────────────
 function PanchangaSection() {
   const [selectedCity, setSelectedCity] = useState('Bengaluru');
+  const [loading, setLoading] = useState(false);
+  const [panchangaData, setPanchangaData] = useState<any>(null);
   const cities = ['Bengaluru', 'Chennai', 'Hyderabad', 'Thiruvananthapuram', 'Vijayawada'];
-  const currentPanchanga = CITY_PANCHANGA[selectedCity];
+
+  // Format today's date dynamically (real-time update)
+  const getTodayFormatted = () => {
+    const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    return new Date().toLocaleDateString('en-IN', options);
+  };
+
+  useEffect(() => {
+    let active = true;
+    const fetchPanchanga = async () => {
+      setLoading(true);
+      try {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}`;
+
+        const res = await fetch('/api/panchanga', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            date: dateStr,
+            location: selectedCity,
+            timezone: 'Asia/Kolkata'
+          })
+        });
+        const result = await res.json();
+        if (active && result.success) {
+          setPanchangaData(result);
+        }
+      } catch (err) {
+        console.error('Error fetching real-time panchanga:', err);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    fetchPanchanga();
+    return () => {
+      active = false;
+    };
+  }, [selectedCity]);
+
+  // Fallback to static mapping if API fails or is loading
+  const getDisplayData = () => {
+    if (panchangaData) {
+      const raw = panchangaData.raw || {};
+      const timings = panchangaData.timings || {};
+      const tithiStr = raw.tithi?.name ? `${raw.tithi.name}${raw.tithi.paksha ? ` (${raw.tithi.paksha})` : ''}` : 'Loading...';
+      const nakshatraStr = raw.nakshatra?.name || 'Loading...';
+      const yogaStr = raw.yoga?.name || 'Loading...';
+      const karanaStr = raw.karana?.name || 'Loading...';
+      const rahuStr = timings.rahuKalam ? `${timings.rahuKalam.start} – ${timings.rahuKalam.end}` : 'Loading...';
+      
+      return {
+        date: getTodayFormatted(),
+        tithi: tithiStr,
+        nakshatra: nakshatraStr,
+        yoga: yogaStr,
+        karana: karanaStr,
+        rahu: rahuStr,
+        tithiName: raw.tithi?.name ? `${raw.tithi.paksha || ''} ${raw.tithi.name}` : 'Krishna Panchami'
+      };
+    }
+
+    const fallback = CITY_PANCHANGA[selectedCity];
+    return {
+      date: getTodayFormatted(),
+      tithi: fallback.tithi,
+      nakshatra: fallback.nakshatra,
+      yoga: fallback.yoga,
+      karana: fallback.karana,
+      rahu: fallback.rahu,
+      tithiName: `Krishna ${fallback.tithi.split(' ')[0]}`
+    };
+  };
+
+  const current = getDisplayData();
 
   return (
     <section className="panchanga-section" id="panchanga">
@@ -533,13 +613,30 @@ function PanchangaSection() {
       <div className="panchanga-card reveal-up">
 
         {/* Left: Data */}
-        <div className="panchanga-data">
+        <div className="panchanga-data" style={{ position: 'relative' }}>
+          {loading && (
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(26,3,3,0.75)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 5,
+              fontSize: '11px',
+              color: C.gold,
+              fontFamily: 'var(--font-inter-family), sans-serif',
+              letterSpacing: '0.15em'
+            }}>
+              SYNCING VEDIC TIMINGS...
+            </div>
+          )}
           <div className="panchanga-card-top">
             <div>
               <span className="type-label" style={{ color: 'var(--color-gold-mid)', fontSize: '10px' }}>TODAY</span>
-              <div className="panchanga-date">{currentPanchanga.date}</div>
+              <div className="panchanga-date">{current.date}</div>
             </div>
-            <div className="panchanga-tithi-name">Krishna Panchami</div>
+            <div className="panchanga-tithi-name">{current.tithiName}</div>
           </div>
 
           <div className="panchanga-divider"></div>
@@ -547,25 +644,25 @@ function PanchangaSection() {
           <div className="panchanga-grid">
             <div className="panchanga-item">
               <span className="panchanga-item-label type-label">TITHI</span>
-              <span className="panchanga-item-value">{currentPanchanga.tithi}</span>
+              <span className="panchanga-item-value">{current.tithi}</span>
             </div>
             <div className="panchanga-item">
               <span className="panchanga-item-label type-label">NAKSHATRA</span>
-              <span className="panchanga-item-value">{currentPanchanga.nakshatra}</span>
+              <span className="panchanga-item-value">{current.nakshatra}</span>
             </div>
             <div className="panchanga-item">
               <span className="panchanga-item-label type-label">YOGA</span>
-              <span className="panchanga-item-value">{currentPanchanga.yoga}</span>
+              <span className="panchanga-item-value">{current.yoga}</span>
             </div>
             <div className="panchanga-item">
               <span className="panchanga-item-label type-label">KARANA</span>
-              <span className="panchanga-item-value">{currentPanchanga.karana}</span>
+              <span className="panchanga-item-value">{current.karana}</span>
             </div>
           </div>
 
           <div className="panchanga-rahu">
             <span className="type-label" style={{ color: 'var(--color-gold-mid)', fontSize: '10px' }}>RAHU KALAM</span>
-            <span className="panchanga-rahu-time">{currentPanchanga.rahu}</span>
+            <span className="panchanga-rahu-time">{current.rahu}</span>
           </div>
 
           <div className="panchanga-divider"></div>
@@ -1102,9 +1199,9 @@ function Footer() {
     <footer style={{ padding: '60px 40px', borderTop: `1px solid rgba(197,160,89,0.1)`, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <img src="/assets/logo.png" alt="Jaya Janardhana Temple Logo" style={{ width: '48px', height: '48px', objectFit: 'contain', marginBottom: '16px' }} />
       <div style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '0.2em', color: C.gold, marginBottom: '8px' }}>JAYA JANARDHANA</div>
-      <div style={{ fontSize: '11px', opacity: 0.4, fontFamily: 'var(--font-inter-family), sans-serif', letterSpacing: '0.2em' }}>SACRED GOODS STOREFRONT</div>
+      <div style={{ fontSize: '11px', opacity: 0.4, fontFamily: 'var(--font-inter-family), sans-serif', letterSpacing: '0.2em' }}>SACRED GOODS STOREFRONT (JAYA JANARDANA)</div>
       <div style={{ height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}30, transparent)`, margin: '24px auto', maxWidth: '300px' }} />
-      <div style={{ fontSize: '12px', opacity: 0.3, fontFamily: 'var(--font-inter-family), sans-serif' }}>© {new Date().getFullYear()} Jaya Janardhana. Heritage Community Marketplace.</div>
+      <div style={{ fontSize: '12px', opacity: 0.3, fontFamily: 'var(--font-inter-family), sans-serif' }}>© {new Date().getFullYear()} Jaya Janardhana / Jaya Janardana. Heritage Community Marketplace.</div>
     </footer>
   );
 }
@@ -1124,6 +1221,91 @@ function ReachOutSection({ onJoin }: { onJoin: () => void }) {
         >
           Reach Out Us →
         </button>
+      </div>
+    </section>
+  );
+}
+
+// ─── VISIBLE FAQ SECTION ──────────────────────────────────────────────────────
+function FaqSection() {
+  const faqs = [
+    { q: "How is the brand name spelled, Jaya Janardhana or Jaya Janardana?", a: "Our brand name can be transliterated as Jaya Janardhana (with 'h') or Jaya Janardana (without 'h'). Both spellings refer to our sacred Salem-based sourcing storefront and regional South India temple distribution network. We ensure complete search indexation for both variations so that devotees can easily find our pure offerings." },
+    { q: "Why is pure camphor important for daily worship?", a: "Pure camphor burns cleanly without releasing toxic synthetic chemical residues, preventing respiratory issues and maintaining a pure temple atmosphere." },
+    { q: "How can I verify the purity of camphor?", a: "100% pure camphor burns completely without leaving behind any black residue or ash, and emits a clean, sweet aroma." },
+    { q: "Does the Deepa Oil contain mineral oil?", a: "No, our Sacred Deepa Oil is formulated with 100% natural, plant-based oils and has zero mineral oil or synthetic additives." },
+    { q: "Is the agarbatti safe for daily indoor use?", a: "Yes, our Sandalwood Bliss Agarbatti is crafted using natural wood powders and oils, avoiding artificial charcoal binders to ensure respiratory safety." },
+    { q: "What regions do you supply across South India?", a: "We distribute products to retailers, temples, and homes in Karnataka, Tamil Nadu, Kerala, Andhra Pradesh, and Telangana." }
+  ];
+
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+
+  return (
+    <section id="faq" style={{ padding: '100px 40px', backgroundColor: '#1A0303', borderTop: '1px solid var(--color-border)' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, display: 'block', marginBottom: '16px' }}>FAQ</span>
+          <h2 style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 600, color: C.white, fontFamily: 'var(--font-cormorant-family), serif', lineHeight: 1.1, margin: 0 }}>
+            Frequently Asked <em className="shimmer-text" style={{ fontStyle: 'italic', fontWeight: 300 }}>Questions</em>
+          </h2>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {faqs.map((faq, idx) => (
+            <div 
+              key={idx} 
+              style={{ 
+                background: 'rgba(45,5,5,0.4)', 
+                border: `1px solid ${openIdx === idx ? C.gold : 'var(--color-border)'}`, 
+                borderRadius: '12px',
+                overflow: 'hidden',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <button
+                onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
+                style={{
+                  width: '100%',
+                  padding: '24px 28px',
+                  background: 'none',
+                  border: 'none',
+                  color: C.white,
+                  fontFamily: 'var(--font-cormorant-family), serif',
+                  fontSize: '18px',
+                  fontWeight: 500,
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  outline: 'none'
+                }}
+              >
+                <span>{faq.q}</span>
+                <span style={{ color: C.gold, fontSize: '20px', transition: 'transform 0.3s', transform: openIdx === idx ? 'rotate(45deg)' : 'none' }}>+</span>
+              </button>
+              
+              <div style={{
+                maxHeight: openIdx === idx ? '200px' : '0',
+                opacity: openIdx === idx ? 1 : 0,
+                overflow: 'hidden',
+                transition: 'all 0.3s ease-in-out',
+                padding: openIdx === idx ? '0 28px 24px' : '0 28px 0'
+              }}>
+                <p style={{ 
+                  margin: 0, 
+                  fontSize: '14px', 
+                  lineHeight: 1.7, 
+                  color: C.beige, 
+                  opacity: 0.8, 
+                  fontFamily: 'var(--font-jost-family), sans-serif',
+                  fontWeight: 300 
+                }}>
+                  {faq.a}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -1171,6 +1353,7 @@ export default function App() {
             <AboutSection />
             <CatalogSection user={user} setAuthMode={setAuthMode} />
             <SubscriptionSection user={user} />
+            <FaqSection />
             <ReachOutSection onJoin={() => {
               setShowAffiliate(true);
               setTimeout(() => document.getElementById('affiliate')?.scrollIntoView({ behavior: 'smooth' }), 100);
