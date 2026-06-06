@@ -32,7 +32,10 @@ const jost = Jost({
 export const metadata: Metadata = {
   title: "Jaya Janardhana - Sacred Goods Storefront",
   description: "Heritage Community Marketplace for Sacred Distribution",
-  icons: { icon: '/favicon.svg' }
+  icons: { icon: '/favicon.svg' },
+  verification: {
+    google: "ZLvrsxBgeoxoLY4yZFeIRQEwbyW2kyAqdCZXeT8mqik",
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -41,6 +44,322 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preload" href="/assets/logo.png" as="image" />
         <link rel="preload" href="/assets/hero_bg.jpg" as="image" />
+        
+        {/* Schema Suite - 8 Complete JSON-LD Blocks */}
+        <script
+          type="application/ld+json"
+          id="schema-organization"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Jaya Janardhana",
+              "url": "https://www.jayajanardhana.com",
+              "logo": "https://www.jayajanardhana.com/assets/logo.png",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+91-8431119696",
+                "contactType": "customer service"
+              }
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          id="schema-local-business"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "Jaya Janardhana Sourcing Hub",
+              "image": "https://www.jayajanardhana.com/assets/supply_artisan.jpg",
+              "@id": "https://www.jayajanardhana.com/#localbusiness",
+              "url": "https://www.jayajanardhana.com",
+              "telephone": "+91-8431119696",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Heritage Distribution St",
+                "addressLocality": "Bengaluru",
+                "addressRegion": "Karnataka",
+                "postalCode": "560001",
+                "addressCountry": "IN"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 12.9716,
+                "longitude": 77.5946
+              },
+              "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+                ],
+                "opens": "06:00",
+                "closes": "21:00"
+              }
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          id="schema-website"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Jaya Janardhana",
+              "url": "https://www.jayajanardhana.com",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.jayajanardhana.com/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          id="schema-speakable"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              "name": "Daily Panchanga Calendar",
+              "speakable": {
+                "@type": "SpeakableSpecification",
+                "cssSelector": [".panchanga-date", ".panchanga-item", ".panchanga-rahu-time"]
+              },
+              "url": "https://www.jayajanardhana.com/#panchanga"
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          id="schema-breadcrumb"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://www.jayajanardhana.com"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Blog",
+                  "item": "https://www.jayajanardhana.com/blog"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Cities",
+                  "item": "https://www.jayajanardhana.com/cities"
+                }
+              ]
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          id="schema-product"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Product",
+              "name": "100% Pure Camphor",
+              "image": "https://www.jayajanardhana.com/assets/products/Camphor%20JJ.png",
+              "description": "100% Pure Camphor for Daily Worship, containing no synthetic compounds. Pure camphor for clean and safe respiratory daily exposure.",
+              "sku": "JJ-CAMPHOR-100",
+              "mpn": "JJ-CAMPHOR-100",
+              "brand": {
+                "@type": "Brand",
+                "name": "Jaya Janardhana"
+              },
+              "offers": {
+                "@type": "Offer",
+                "url": "https://www.jayajanardhana.com/#shop",
+                "priceCurrency": "INR",
+                "price": "219",
+                "priceValidUntil": "2027-12-31",
+                "itemCondition": "https://schema.org/NewCondition",
+                "availability": "https://schema.org/InStock"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.9",
+                "reviewCount": "184"
+              },
+              "review": [
+                {
+                  "@type": "Review",
+                  "author": {
+                    "@type": "Person",
+                    "name": "Srinivas Prasad"
+                  },
+                  "datePublished": "2026-05-15",
+                  "reviewBody": "Excellent purity. Does not produce black smoke, burns completely leaving zero residue.",
+                  "reviewRating": {
+                    "@type": "Rating",
+                    "bestRating": "5",
+                    "ratingValue": "5",
+                    "worstRating": "1"
+                  }
+                }
+              ]
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          id="schema-faq"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Why is pure camphor important for daily worship?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Pure camphor burns cleanly without releasing toxic synthetic chemical residues, preventing respiratory issues and maintaining a pure temple atmosphere."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I verify the purity of camphor?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "100% pure camphor burns completely without leaving behind any black residue or ash, and emits a clean, sweet aroma."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Where does Jaya Janardhana source its camphor?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We source our camphor and other sacred ritual goods directly from traditional heritage artisans across South India."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does the Deepa Oil contain mineral oil?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, our Sacred Deepa Oil is formulated with 100% natural, plant-based oils and has zero mineral oil or synthetic additives."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is the agarbatti safe for daily indoor use?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, our Sandalwood Bliss Agarbatti is crafted using natural wood powders and oils, avoiding artificial charcoal binders to ensure respiratory safety."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What regions do you supply across South India?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We distribute products to retailers, temples, and homes in Karnataka, Tamil Nadu, Kerala, Andhra Pradesh, and Telangana."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I become an affiliate distributor?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can sign up through our online affiliate portal. Once verified, you can manage order fulfillment and earn margins in your local area."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the earning margins for Jaya Janardhana partners?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our divine partners and affiliates earn an average of 25% to 30% commission per product sold."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do I need to pay any upfront fees to join?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, joining the Jaya Janardhana community sourcing and distribution network is completely free of charge."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do you provide training for distributors?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, we provide personalized guidance, marketing materials, sales strategies, and digital tools to help you succeed."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How does the subscription plan work?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can subscribe to a monthly or annual delivery of our Daily Pooja Kit, ensuring you never run out of pure elements for your daily prayers."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Can I cancel my subscription at any time?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, you can easily cancel, pause, or adjust your subscription frequency at any time through your customer profile."
+                  }
+                }
+              ]
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          id="schema-howto"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "HowTo",
+              "name": "How to Perform Daily Morning Puja at Home",
+              "description": "A guide to performing your daily morning worship with pure, sacred ritual ingredients.",
+              "totalTime": "PT15M",
+              "step": [
+                {
+                  "@type": "HowToStep",
+                  "name": "Cleanse the Altar",
+                  "text": "Clean the sacred altar space and wipe down the brass lamps and deity idols with a clean cloth.",
+                  "url": "https://www.jayajanardhana.com/#about"
+                },
+                {
+                  "@type": "HowToStep",
+                  "name": "Prepare the Deepa Lamp",
+                  "text": "Place cotton wicks in the lamp and pour our 100% natural Deepa Oil, then light the lamp.",
+                  "url": "https://www.jayajanardhana.com/#shop"
+                },
+                {
+                  "@type": "HowToStep",
+                  "name": "Offer Incense",
+                  "text": "Light the Sandalwood Bliss Agarbatti or Sandalwood Dhoop stick to purify the household air.",
+                  "url": "https://www.jayajanardhana.com/#shop"
+                },
+                {
+                  "@type": "HowToStep",
+                  "name": "Aarti with Pure Camphor",
+                  "text": "Place pure camphor on the camphor burner, light it, and perform the circular Aarti movement while chanting prayers.",
+                  "url": "https://www.jayajanardhana.com/#shop"
+                }
+              ]
+            })
+          }}
+        />
         
         <style dangerouslySetInnerHTML={{ __html: `
           html {

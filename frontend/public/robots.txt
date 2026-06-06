@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Allow: /blog
+Allow: /cities
+Disallow: /api/
+Disallow: /auth/
+Disallow: /orders
+
+Sitemap: https://www.jayajanardhana.com/sitemap.xml

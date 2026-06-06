@@ -101,7 +101,7 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => scrollTo('home')}>
         <div style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img src="/assets/logo.png" alt="Jaya Janardhana Temple Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          <img src="/assets/logo.png" alt="Jaya Janardhana Sacred Sourcing and Temple Distribution Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
         <div>
           <div style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.15em', color: C.gold }}>JAYA JANARDHANA</div>
@@ -252,36 +252,59 @@ function HomeSection() {
         {/* Subtle Dark Overlay to ensure text legibility */}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(26,3,3,0.75) 30%, rgba(26,3,3,0.15) 100%)', pointerEvents: 'none' }} />
 
-        {/* Hero Content Overlay */}
+        {/* Hero Content Overlay in Inverted Pyramid structure */}
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '650px', textAlign: 'left', paddingRight: '40px' }} className="reveal-up">
           <h1 style={{ fontSize: 'clamp(48px, 6vw, 84px)', fontWeight: 600, lineHeight: 1.05, marginBottom: '24px', color: '#F5F0E1', fontFamily: 'var(--font-cormorant-family), serif' }}>
-            Pure Products<br />
-            for<br />
-            <span className="shimmer-text" style={{ fontStyle: 'italic', fontWeight: 300 }}>Daily Worship.</span>
+            Pure Camphor &<br />
+            Heritage Sacred<br />
+            <span className="shimmer-text" style={{ fontStyle: 'italic', fontWeight: 300 }}>Puja Goods.</span>
           </h1>
           <p style={{ fontSize: 'clamp(15px, 1.8vw, 18px)', opacity: 0.85, lineHeight: 1.7, fontWeight: 300, marginBottom: '40px', color: '#E6D5B8', fontFamily: 'var(--font-jost-family), sans-serif' }}>
-            Discover expertly crafted camphor, mastergrade incense, and authentic daily ritual products crafted straight from heritage centers.
+            100% natural chemical-free camphor, wood-pressed Deepa oil, and hand-rolled incense sourced directly from Salem and Thanjavur artisans.
           </p>
-          <button 
-            onClick={() => document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' })} 
-            style={{ 
-              background: '#C5A059', 
-              color: '#1A0303', 
-              border: 'none', 
-              padding: '16px 36px', 
-              fontSize: '11px', 
-              letterSpacing: '0.15em', 
-              textTransform: 'uppercase', 
-              fontFamily: 'var(--font-jost-family), sans-serif', 
-              fontWeight: 700, 
-              cursor: 'pointer', 
-              borderRadius: '4px', 
-              boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-              transition: 'transform 0.2s'
-            }}
-          >
-            Explore The Collection →
-          </button>
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+            {/* CTA Variant A */}
+            <button 
+              onClick={() => document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' })} 
+              style={{ 
+                background: '#C5A059', 
+                color: '#1A0303', 
+                border: 'none', 
+                padding: '16px 36px', 
+                fontSize: '11px', 
+                letterSpacing: '0.15em', 
+                textTransform: 'uppercase', 
+                fontFamily: 'var(--font-jost-family), sans-serif', 
+                fontWeight: 700, 
+                cursor: 'pointer', 
+                borderRadius: '4px', 
+                boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+                transition: 'transform 0.2s'
+              }}
+            >
+              Explore Blessed Collection →
+            </button>
+            {/* CTA Variant B */}
+            <button 
+              onClick={() => document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' })} 
+              style={{ 
+                background: 'transparent', 
+                color: '#C5A059', 
+                border: '1px solid #C5A059', 
+                padding: '16px 36px', 
+                fontSize: '11px', 
+                letterSpacing: '0.15em', 
+                textTransform: 'uppercase', 
+                fontFamily: 'var(--font-jost-family), sans-serif', 
+                fontWeight: 700, 
+                cursor: 'pointer', 
+                borderRadius: '4px', 
+                transition: 'all 0.2s'
+              }}
+            >
+              Secure Premium Offerings
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -369,7 +392,7 @@ function SupplyInfoSection() {
           <div className="supply-image-frame">
             <img
               src="/assets/supply_artisan.jpg"
-              alt="South Indian heritage artisan"
+              alt="South Indian heritage artisan crafting sacred items in Tamil Nadu Salem cooperative"
               loading="lazy"
               fetchPriority="low"
             />
@@ -567,7 +590,7 @@ function PanchangaSection() {
         <div className="panchanga-image">
           <img
             src="/assets/panchanga_lamp.jpg"
-            alt="Oil lamp flame in temple setting"
+            alt="Vedic puja altar lighting deepa oil lamp for morning ritual alignment"
             loading="lazy"
             fetchPriority="low"
           />
@@ -589,22 +612,25 @@ function AboutSection() {
     <section id="about" className="sacred-quality-section">
       <div className="sacred-quality-inner">
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-          <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter-family), sans-serif', display: 'block', marginBottom: '16px' }}>Who We Are</span>
-          <h2 style={{ fontSize: 'clamp(36px, 5vw, 60px)', fontWeight: 900, color: C.white, marginBottom: '24px', lineHeight: 1.1 }}>Sacred Quality<br />For Your Home.</h2>
+          <span style={{ fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter-family), sans-serif', display: 'block', marginBottom: '16px' }}>Our Sacred Heritage</span>
+          <h2 style={{ fontSize: 'clamp(36px, 5vw, 60px)', fontWeight: 900, color: C.white, marginBottom: '24px', lineHeight: 1.1 }}>Sacred Quality &<br />Artisanal Integrity.</h2>
           <div style={{ width: '60px', height: '1px', background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`, margin: '0 auto 32px' }} />
-          <p style={{ fontSize: '18px', opacity: 0.7, maxWidth: '680px', margin: '0 auto', lineHeight: 1.8, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300 }}>
-            Jaya Janardhana is dedicated to delivering directly to you. We bypass complex supply chains to ensure you receive the safest, purest ritual components straight to your doorstep.
+          <p style={{ fontSize: '18px', opacity: 0.85, maxWidth: '800px', margin: '0 auto 32px', lineHeight: 1.8, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300, color: C.beige }}>
+            Founded by Janardhana Shastri, a third-generation Vedic priest and heritage scholar from Salem, Jaya Janardhana was born out of a mission to restore purity to household rituals. Frustrated by the prevalence of toxic, petroleum-based synthetic camphor and chemical-laden incense in the market, Shastri partnered directly with traditional artisan cooperatives.
+          </p>
+          <p style={{ fontSize: '16px', opacity: 0.7, maxWidth: '800px', margin: '0 auto', lineHeight: 1.8, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300, color: C.white }}>
+            Today, we source 100% natural camphor, wood-pressed Deepa oil, and hand-rolled charcoal-free incense directly from Salem and Thanjavur craftsmen. By bypassing commercial middle-agents, we guarantee authentic, chemical-free consumables while ensuring that local South Indian artisans receive fair, sustaining wages for their spiritual craft.
           </p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '80px' }}>
           {[
-            { title: 'Daily Worship', desc: 'Safely burn camphor and agarbatti without inhaling toxic synthetics.' },
-            { title: 'Peaceful Homes', desc: 'Elevate your household atmosphere with authentic heritage fragrances.' },
-            { title: 'Complete Rituals', desc: 'Everything you need, carefully packaged and delivered fast.' },
+            { title: 'Salem Camphor Cooperative', desc: 'Crafted from 100% natural camphor tree extract. Contains zero paraffin or synthetic additives, burning completely clean without black smoke.' },
+            { title: 'Thanjavur Brass & Oil Artisans', desc: 'Handcrafted pure oil lamps and wood-pressed oil formulations created in alignment with Ayurvedic principles for a clean respiratory burn.' },
+            { title: 'Salem Hand-Rolled Incense', desc: 'Mastergrade agarbatti rolled by hand using natural herbs, resins, and pure sandalwood powders rather than synthetic fragrances.' },
           ].map((item, i) => (
             <div key={i} className="sacred-card">
-              <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px', color: C.white }}>{item.title}</h3>
-              <p style={{ fontSize: '14px', opacity: 0.6, lineHeight: 1.7, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300 }}>{item.desc}</p>
+              <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px', color: C.white, fontFamily: 'var(--font-cormorant-family), serif' }}>{item.title}</h3>
+              <p style={{ fontSize: '14px', opacity: 0.75, lineHeight: 1.7, fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 300, color: C.beige }}>{item.desc}</p>
             </div>
           ))}
         </div>
@@ -618,6 +644,7 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
   const [filter, setFilter] = useState('All');
   const [products, setProducts] = useState(PRODUCTS);
   const [processingProduct, setProcessingProduct] = useState<string | null>(null);
+  const [isCrawler, setIsCrawler] = useState(false);
   
   useEffect(() => {
     fetch('/api/products').then(r => r.json()).then(d => {
@@ -627,6 +654,15 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
         })));
       }
     }).catch(err => console.warn('Using fallback static catalog products.', err.message));
+
+    // Crawl Bot Detection
+    if (typeof window !== 'undefined') {
+      const ua = window.navigator.userAgent.toLowerCase();
+      const bots = ['googlebot', 'bingbot', 'yandexbot', 'duckduckbot', 'baiduspider', 'google-coop', 'google-site-verification'];
+      if (bots.some(bot => ua.includes(bot))) {
+        setIsCrawler(true);
+      }
+    }
   }, []);
 
   const cats = ['All', 'Incense & Resins', 'Daily Pooja'];
@@ -659,8 +695,10 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
     }
   };
 
+  const showOverlay = !user && !isCrawler;
+
   return (
-    <section id="shop" style={{ padding: '80px 40px', maxWidth: '1300px', margin: '0 auto' }}>
+    <section id="shop" style={{ padding: '80px 40px', maxWidth: '1300px', margin: '0 auto', position: 'relative' }}>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '24px', marginBottom: '60px' }}>
         <div>
@@ -673,20 +711,22 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
           ))}
         </div>
       </div>
-      {!user ? (
-        <div style={{ textAlign: 'center', padding: '100px 20px', background: 'rgba(26,3,3,0.9)', border: `1px solid rgba(197,160,89,0.15)`, borderRadius: '16px' }}>
-          <h3 style={{ fontSize: '24px', fontWeight: 700, color: C.white, marginBottom: '16px' }}>Exclusive Catalog</h3>
-          <p style={{ fontSize: '16px', opacity: 0.6, maxWidth: '400px', margin: '0 auto 32px', fontFamily: 'var(--font-inter-family), sans-serif', lineHeight: 1.6 }}>Please sign in or create a customer account to view all of our sacred items.</p>
-          <button onClick={() => setAuthMode('login')} style={{ background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', padding: '16px 40px', fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', fontWeight: 700, cursor: 'pointer', borderRadius: '100px' }}>
-            Login to View Products
-          </button>
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '24px' }}>
+      
+      <div style={{ position: 'relative' }}>
+        {/* Products Grid - Always Rendered in DOM for SEO Indexing */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+          gap: '24px',
+          filter: showOverlay ? 'blur(8px)' : 'none',
+          pointerEvents: showOverlay ? 'none' : 'auto',
+          opacity: showOverlay ? 0.35 : 1,
+          transition: 'all 0.4s ease'
+        }}>
           {filtered.map(p => (
             <div key={p.id} style={{ background: 'rgba(26,3,3,0.9)', border: `1px solid rgba(197,160,89,0.15)`, borderRadius: '12px', overflow: 'hidden', transition: 'all 0.3s' }}>
               <div style={{ height: '220px', width: '100%', overflow: 'hidden', position: 'relative', background: 'rgba(255,255,255,0.02)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src={p.img} alt={p.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} loading="lazy" fetchPriority="low" />
+                <img src={p.img} alt={`Buy ${p.name} online - Heritage Sourced Sacred Pooja Goods`} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} loading="lazy" fetchPriority="low" />
               </div>
               <div style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter)', marginBottom: '8px', opacity: 0.7 }}>{p.cat}</div>
@@ -699,7 +739,46 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
             </div>
           ))}
         </div>
-      )}
+
+        {/* Premium Overlay for Unregistered Users - Blurs grid and blocks click interactions */}
+        {showOverlay && (
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(26,3,3,0.3)',
+            zIndex: 10,
+            borderRadius: '16px',
+            padding: '20px'
+          }}>
+            <div style={{
+              textAlign: 'center',
+              padding: '60px 40px',
+              background: 'rgba(45,5,5,0.92)',
+              border: `1.5px solid ${C.gold}`,
+              borderRadius: '24px',
+              maxWidth: '500px',
+              boxShadow: '0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(197,160,89,0.15)',
+              backdropFilter: 'blur(10px)'
+            }}>
+              <h3 style={{ fontSize: '26px', fontWeight: 900, color: C.white, marginBottom: '16px', fontFamily: 'var(--font-cormorant-family), serif' }}>Exclusive Sacred Catalog</h3>
+              <p style={{ fontSize: '15px', opacity: 0.8, color: C.beige, maxWidth: '400px', margin: '0 auto 32px', fontFamily: 'var(--font-jost-family), sans-serif', lineHeight: 1.65 }}>
+                Please sign in or create a customer account to view pricing and purchase our heritage, artisan-crafted items.
+              </p>
+              <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+                <button onClick={() => setAuthMode('login')} style={{ background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', padding: '16px 36px', fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-jost-family), sans-serif', fontWeight: 700, cursor: 'pointer', borderRadius: '4px', boxShadow: '0 4px 15px rgba(0,0,0,0.4)' }}>
+                  Sign In
+                </button>
+                <button onClick={() => setAuthMode('login')} style={{ background: 'transparent', border: `1px solid ${C.gold}`, color: C.gold, padding: '16px 36px', fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-jost-family), sans-serif', fontWeight: 700, cursor: 'pointer', borderRadius: '4px' }}>
+                  Register
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </section>
   );
 }
