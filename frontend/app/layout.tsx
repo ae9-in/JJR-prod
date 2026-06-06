@@ -30,11 +30,37 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.jayajanardhana.com"),
+  alternates: {
+    canonical: "/",
+  },
   title: "Jaya Janardhana | Jaya Janardana - Sacred Goods Storefront",
   description: "Jaya Janardhana (also known as Jaya Janardana) is a heritage community marketplace for sacred distribution. Source pure camphor, deepa oil, and natural agarbatti online.",
   icons: { icon: '/favicon.svg' },
   verification: {
     google: "ZLvrsxBgeoxoLY4yZFeIRQEwbyW2kyAqdCZXeT8mqik",
+  },
+  openGraph: {
+    title: "Jaya Janardhana | Jaya Janardana - Sacred Goods Storefront",
+    description: "Jaya Janardhana (also known as Jaya Janardana) is a heritage community marketplace for sacred distribution. Source pure camphor, deepa oil, and natural agarbatti online.",
+    url: "https://www.jayajanardhana.com",
+    siteName: "Jaya Janardhana",
+    images: [
+      {
+        url: "/assets/logo.png",
+        width: 800,
+        height: 600,
+        alt: "Jaya Janardhana logo",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Jaya Janardhana | Jaya Janardana - Sacred Goods Storefront",
+    description: "Jaya Janardhana (also known as Jaya Janardana) is a heritage community marketplace for sacred distribution. Source pure camphor, deepa oil, and natural agarbatti online.",
+    images: ["/assets/logo.png"],
   }
 };
 
