@@ -21,6 +21,56 @@ const getDefaultApiUrl = () => {
   return 'http://localhost:5050/api';
 };
 const API_URL = getDefaultApiUrl();
+const API_STORAGE_KEY = 'jj_working_api_url_v2';
+const API_CANDIDATES = Array.from(
+  new Set(
+    [
+      API_URL,
+      process.env.NEXT_PUBLIC_API_URL,
+      'https://jjr-prod.onrender.com/api',
+      'http://localhost:5050/api',
+      'http://127.0.0.1:5050/api'
+    ]
+      .filter(Boolean)
+      .map((url) => url!.replace(/\/$/, ''))
+  )
+);
+
+const fetchWithTimeout = async (url: string, init: RequestInit = {}, timeoutMs = 6000) => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
+const apiFetch = async (path: string, init: RequestInit = {}) => {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const storedBase = typeof window !== 'undefined' ? localStorage.getItem(API_STORAGE_KEY) : null;
+  const candidates = storedBase
+    ? [storedBase, ...API_CANDIDATES.filter((base) => base !== storedBase)]
+    : API_CANDIDATES;
+
+  let lastError: unknown = null;
+
+  for (const base of candidates) {
+    try {
+      const isRender = base.includes('onrender.com');
+      const timeout = isRender ? 50000 : 6000;
+      const response = await fetchWithTimeout(`${base}${normalizedPath}`, init, timeout);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(API_STORAGE_KEY, base);
+      }
+      return response;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error('Unable to reach backend API.');
+};
 
 // ─── PRODUCTS ─────────────────────────────────────────────────────────────────
 const PRODUCTS = [
@@ -215,7 +265,7 @@ function CatalogSection() {
   const [products, setProducts] = useState(PRODUCTS);
   
   useEffect(() => {
-    fetch(`${API_URL}/products`).then(r => r.json()).then(d => {
+    apiFetch('/products').then(r => r.json()).then(d => {
       if (d.products && d.products.length > 0) {
         setProducts(d.products.map((p: any) => ({
           id: p._id, cat: p.category || 'Incense & Resins', name: p.name, price: p.price, commission: p.commissionRate, img: p.imageUrl || '/assets/products/Camphor JJ.png'
@@ -471,7 +521,7 @@ function AuthModal({ mode, setMode, onLogin }: { mode: 'login' | 'register' | nu
     try {
       const endpoint = mode === 'login' ? '/auth/login' : '/auth/register';
       const bodyPayload = mode === 'register' ? { ...form, role: 'AFFILIATE' } : form;
-      const res = await fetch(`${API_URL}${endpoint}`, {
+      const res = await apiFetch(endpoint, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyPayload)
       });

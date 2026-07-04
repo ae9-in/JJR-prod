@@ -25,9 +25,15 @@ const API_URL = getDefaultApiUrl();
 const API_STORAGE_KEY = 'jj_working_api_url_v2';
 const API_CANDIDATES = Array.from(
   new Set(
-    [API_URL, 'http://localhost:5050/api', 'http://127.0.0.1:5050/api']
+    [
+      API_URL,
+      process.env.NEXT_PUBLIC_API_URL,
+      'https://jjr-prod.onrender.com/api',
+      'http://localhost:5050/api',
+      'http://127.0.0.1:5050/api'
+    ]
       .filter(Boolean)
-      .map((url) => url.replace(/\/$/, ''))
+      .map((url) => url!.replace(/\/$/, ''))
   )
 );
 
@@ -52,7 +58,9 @@ const apiFetch = async (path: string, init: RequestInit = {}) => {
 
   for (const base of candidates) {
     try {
-      const response = await fetchWithTimeout(`${base}${normalizedPath}`, init);
+      const isRender = base.includes('onrender.com');
+      const timeout = isRender ? 50000 : 6000;
+      const response = await fetchWithTimeout(`${base}${normalizedPath}`, init, timeout);
       if (typeof window !== 'undefined') {
         localStorage.setItem(API_STORAGE_KEY, base);
       }
