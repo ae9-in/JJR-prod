@@ -53,6 +53,7 @@ const apiFetch = async (path: string, init: RequestInit = {}) => {
     ? [storedBase, ...API_CANDIDATES.filter((base) => base !== storedBase)]
     : API_CANDIDATES;
 
+  console.log('[apiFetch] path:', path, 'candidates:', candidates);
   let lastError: unknown = null;
 
   for (const base of candidates) {
