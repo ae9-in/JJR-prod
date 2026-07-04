@@ -1,37 +1,35 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import { CartOrder } from '@/lib/models';
+
+const normalizeApiBase = () => {
+  const raw = (process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5050/api').trim();
+  return raw.replace(/\/$/, '');
+};
 
 export async function POST(req: Request) {
   try {
-    await dbConnect();
-    const { name, email, phone, address, items, totalAmount } = await req.json();
+    const apiBase = normalizeApiBase();
+    const body = await req.json();
 
-    if (!name || !email || !phone || !address || !items || !Array.isArray(items) || items.length === 0) {
-      return NextResponse.json({ error: 'All fields and cart items are required' }, { status: 400 });
-    }
-
-    const order = await CartOrder.create({
-      name,
-      email,
-      phone,
-      address,
-      items,
-      totalAmount: Number(totalAmount),
-      status: 'pending'
+    const res = await fetch(`${apiBase}/admin/checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
     });
 
-    console.log(`✅ Cart Order saved to DB: ${order._id} | ${name} | total: ₹${totalAmount}`);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Backend checkout submission failed');
+    }
 
     return NextResponse.json({
       success: true,
-      orderId: order._id,
+      orderId: data.orderId,
       message: 'Our team will get back to you shortly'
     });
 
   } catch (error: any) {
-    console.error('❌ Checkout API Error:', error.message);
-    return NextResponse.json({ error: error.message || 'Checkout submission failed' }, { status: 500 });
+    console.error('❌ Checkout Next.js Proxy Error:', error.message);
+    return NextResponse.json({ error: error.message || 'Checkout failed' }, { status: 500 });
   }
 }

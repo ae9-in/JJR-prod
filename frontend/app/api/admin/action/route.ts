@@ -1,36 +1,34 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import { CartOrder, SubscriptionRegistration } from '@/lib/models';
+
+const normalizeApiBase = () => {
+  const raw = (process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5050/api').trim();
+  return raw.replace(/\/$/, '');
+};
 
 export async function POST(req: Request) {
   try {
-    await dbConnect();
-    const { action, type, id, status } = await req.json();
+    const apiBase = normalizeApiBase();
+    const body = await req.json();
 
-    if (!action || !type || !id) {
-      return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
+    const res = await fetch(`${apiBase}/admin/action`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to execute backend action');
     }
 
-    const Model = type === 'order' ? CartOrder : SubscriptionRegistration;
-
-    if (action === 'delete') {
-      await Model.findByIdAndDelete(id);
-      return NextResponse.json({ success: true, message: `${type} deleted successfully` });
-    }
-
-    if (action === 'update_status') {
-      if (!status) {
-        return NextResponse.json({ error: 'Status is required for update' }, { status: 400 });
-      }
-      await Model.findByIdAndUpdate(id, { status });
-      return NextResponse.json({ success: true, message: `${type} status updated to ${status}` });
-    }
-
-    return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+    return NextResponse.json({
+      success: true,
+      message: data.message
+    });
 
   } catch (error: any) {
-    console.error('❌ Admin Action Error:', error.message);
+    console.error('❌ Admin Action Next.js Proxy Error:', error.message);
     return NextResponse.json({ error: error.message || 'Action execution failed' }, { status: 500 });
   }
 }

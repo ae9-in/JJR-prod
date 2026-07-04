@@ -1,24 +1,28 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import { CartOrder, SubscriptionRegistration } from '@/lib/models';
+
+const normalizeApiBase = () => {
+  const raw = (process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5050/api').trim();
+  return raw.replace(/\/$/, '');
+};
 
 export async function GET() {
   try {
-    await dbConnect();
-
-    // Fetch all cart orders and subscription registrations sorted by newest first
-    const orders = await CartOrder.find({}).sort({ createdAt: -1 });
-    const subscriptions = await SubscriptionRegistration.find({}).sort({ createdAt: -1 });
+    const apiBase = normalizeApiBase();
+    const res = await fetch(`${apiBase}/admin/data`, { cache: 'no-store' });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to fetch data from backend');
+    }
 
     return NextResponse.json({
       success: true,
-      orders,
-      subscriptions
+      orders: data.orders || [],
+      subscriptions: data.subscriptions || []
     });
 
   } catch (error: any) {
-    console.error('❌ Admin Data Fetch Error:', error.message);
+    console.error('❌ Admin Data Next.js Proxy Error:', error.message);
     return NextResponse.json({ error: error.message || 'Failed to fetch admin data' }, { status: 500 });
   }
 }

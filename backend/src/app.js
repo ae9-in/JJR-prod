@@ -9,8 +9,9 @@ import productRoutes from './routes/productRoutes.js';
 import verticalRoutes from './routes/verticalRoutes.js';
 import addressRoutes from './routes/addressRoutes.js';
 import panchangaRoutes from './routes/panchangaRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
-
+ 
 const allowedOrigins = [
   ...env.frontendUrl.split(',').map(o => o.trim().replace(/\/$/, '')),
   'https://jayajanardhana.com',
@@ -54,6 +55,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/addresses', addressRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/panchanga', panchangaRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
