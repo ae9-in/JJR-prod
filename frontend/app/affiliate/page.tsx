@@ -10,9 +10,14 @@ const C = {
   white: '#F5F0E1', success: '#10b981', error: '#ef4444'
 };
 const getDefaultApiUrl = () => {
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:5050/api';
+    }
+  }
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
   if (envUrl) return envUrl;
-  if (typeof window !== 'undefined') return `http://${window.location.hostname}:5050/api`;
   return 'http://localhost:5050/api';
 };
 const API_URL = getDefaultApiUrl();
@@ -316,40 +321,32 @@ function SubscribeSection({ user, setAuthMode }: { user: any, setAuthMode: (m: '
   const [error, setError] = useState('');
 
   const price = (plan: typeof PLANS[0]) => billing === 'annual' ? plan.price * 12 : plan.price;
-  const paise = (plan: typeof PLANS[0]) => price(plan) * 100;
 
   const pay = async () => {
     if (!selectedPlan) return;
     setStep('processing');
     setError('');
     try {
-      const res = await fetch('/api/subscription/create-order', {
+      const res = await fetch('/api/subscription/register', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId: selectedPlan.id, planName: `${selectedPlan.name} (${billing})`, planPrice: paise(selectedPlan), userId: activeUser.id, name: form.name, email: activeUser.email, phone: form.phone, address: form.address })
+        body: JSON.stringify({
+          name: form.name,
+          email: activeUser.email,
+          phone: form.phone,
+          address: form.address,
+          planId: selectedPlan.id,
+          planName: selectedPlan.name,
+          planPrice: price(selectedPlan),
+          billingMode: billing
+        })
       });
-      const order = await res.json();
-      if (order.error) throw new Error(order.error);
-
-      const options = {
-        key: order.keyId, amount: order.amount, currency: order.currency,
-        name: 'Jaya Janardhana', description: `Membership: ${selectedPlan.name}`,
-        order_id: order.orderId,
-        handler: async (response: any) => {
-          setStep('processing');
-          const verifyRes = await fetch('/api/subscription/verify-payment', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ razorpay_order_id: response.razorpay_order_id, razorpay_payment_id: response.razorpay_payment_id, razorpay_signature: response.razorpay_signature, subscriberId: order.subscriberId })
-          });
-          const verify = await verifyRes.json();
-          if (verify.success) setStep('success');
-          else throw new Error(verify.error || 'Verification failed');
-        },
-        prefill: { name: form.name, email: activeUser.email, contact: form.phone },
-        theme: { color: C.gold }
-      };
-      const rzp = new (window as any).Razorpay(options);
-      rzp.open();
-      setStep('details');
+      const data = await res.json();
+      if (data.success) {
+        alert('Our team will get back to you shortly');
+        setStep('success');
+      } else {
+        throw new Error(data.error || 'Registration failed');
+      }
     } catch (err: any) {
       setError(err.message);
       setStep('details');

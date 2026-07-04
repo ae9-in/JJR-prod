@@ -8,7 +8,17 @@ export async function POST(req: Request) {
     const { planId, planName, planPrice, userId, name, email, phone, address } = await req.json();
 
     if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-      throw new Error('Razorpay keys are missing in environment variables');
+      console.warn('⚠️ Razorpay keys are missing in environment variables. Falling back to mock order.');
+      const invoiceNumber = `INV-MOCK-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+      return NextResponse.json({
+        isMock: true,
+        orderId: `mock_order_${Date.now()}`,
+        amount: Number(planPrice),
+        currency: 'INR',
+        subscriberId: `mock_${userId}_${Date.now()}`,
+        invoiceNumber: invoiceNumber,
+        keyId: 'mock_key_id'
+      });
     }
 
     const razorpay = new Razorpay({

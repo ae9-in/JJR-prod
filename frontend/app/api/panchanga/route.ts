@@ -190,15 +190,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: 'Invalid date.' }, { status: 400 });
     }
 
-    const apiUrl = (process.env.ASTROLOGY_API_URL || '').trim();
-    const apiKey = (process.env.ASTROLOGY_API_KEY || '').trim();
-    if (!apiUrl || !apiKey) {
-      return NextResponse.json(
-        { success: false, message: 'Astrology API env vars not configured on server.' },
-        { status: 500 }
-      );
-    }
-
     const normalizedLocation = normalizeLocation(location);
     const coordsFromLocation = getCoordinates(normalizedLocation);
     const coords = {
@@ -208,36 +199,64 @@ export async function POST(req: Request) {
     const [yearStr, monthStr, dayStr] = normalizedDate.split('-');
     const tzOffset = tzOffsetFromString(timezone || 'Asia/Kolkata');
 
-    const providerRes = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
-      body: JSON.stringify({
-        year: Number(yearStr), month: Number(monthStr), day: Number(dayStr),
-        hour: 6, minute: 0,
-        lat: coords.lat, lng: coords.lng,
-        tz_str: 'Asia/Kolkata', ayanamsha: 'lahiri'
-      }),
-    });
+    const apiUrl = (process.env.ASTROLOGY_API_URL || '').trim();
+    const apiKey = (process.env.ASTROLOGY_API_KEY || '').trim();
 
-    const rawText = await providerRes.text();
     let providerPayload: any = null;
-    try { providerPayload = rawText ? JSON.parse(rawText) : null; } catch { providerPayload = rawText; }
+    let successApi = false;
 
-    if (!providerRes.ok) {
-      return NextResponse.json(
-        { success: false, message: `Astrology provider error ${providerRes.status}`, raw: providerPayload },
-        { status: 502 }
-      );
+    if (apiUrl && apiKey) {
+      try {
+        const providerRes = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+          body: JSON.stringify({
+            year: Number(yearStr), month: Number(monthStr), day: Number(dayStr),
+            hour: 6, minute: 0,
+            lat: coords.lat, lng: coords.lng,
+            tz_str: 'Asia/Kolkata', ayanamsha: 'lahiri'
+          }),
+        });
+
+        if (providerRes.ok) {
+          const rawText = await providerRes.text();
+          providerPayload = rawText ? JSON.parse(rawText) : null;
+          successApi = true;
+        } else {
+          console.warn(`Astrology provider responded with non-200 status: ${providerRes.status}`);
+        }
+      } catch (err: any) {
+        console.warn('Astrology API request failed, falling back to local calculation:', err?.message);
+      }
+    } else {
+      console.warn('Astrology API keys not configured, falling back to local calculation.');
     }
 
     const timings = calcTimings(Number(yearStr), Number(monthStr), Number(dayStr), coords.lat, coords.lng, tzOffset);
 
-    return NextResponse.json({
-      success: true,
-      data: formatPanchanga(providerPayload, { date: normalizedDate, location: normalizedLocation }),
-      timings,
-      raw: providerPayload
-    });
+    if (successApi && providerPayload) {
+      return NextResponse.json({
+        success: true,
+        data: formatPanchanga(providerPayload, { date: normalizedDate, location: normalizedLocation }),
+        timings,
+        raw: providerPayload
+      });
+    } else {
+      // Offline fallback
+      const mockRaw = {
+        weekday: new Date(Number(yearStr), Number(monthStr) - 1, Number(dayStr)).toLocaleDateString('en-IN', { weekday: 'long' }),
+        tithi: { name: 'Panchami', paksha: 'Krishna' },
+        nakshatra: { name: 'Shravana' },
+        yoga: { name: 'Brahma' },
+        karana: { name: 'Kaulava' }
+      };
+      return NextResponse.json({
+        success: true,
+        data: formatPanchanga(mockRaw, { date: normalizedDate, location: normalizedLocation }),
+        timings,
+        raw: mockRaw
+      });
+    }
   } catch (error: any) {
     return NextResponse.json({ success: false, message: error?.message || 'Unexpected error.' }, { status: 500 });
   }

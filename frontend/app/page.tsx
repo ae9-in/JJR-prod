@@ -11,9 +11,14 @@ const C = {
   white: '#F5F0E1', success: '#10b981', error: '#ef4444'
 };
 const getDefaultApiUrl = () => {
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:5050/api';
+    }
+  }
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
   if (envUrl) return envUrl;
-  if (typeof window !== 'undefined') return `http://${window.location.hostname}:5050/api`;
   return 'http://localhost:5050/api';
 };
 const API_URL = getDefaultApiUrl();
@@ -73,7 +78,7 @@ const PRODUCTS = [
 const NAV_SECTIONS = ['margins', 'panchanga', 'about', 'shop', 'subscription'];
 
 // ─── NAVBAR ───────────────────────────────────────────────────────────────────
-function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: string; setActive: (s: string) => void, user: any, setAuthMode: (m: 'login' | null) => void, onLogout: () => void }) {
+function Navbar({ active, setActive, user, setAuthMode, onLogout, cartCount, onCartClick }: { active: string; setActive: (s: string) => void, user: any, setAuthMode: (m: 'login' | null) => void, onLogout: () => void, cartCount: number, onCartClick: () => void }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -139,6 +144,16 @@ function Navbar({ active, setActive, user, setAuthMode, onLogout }: { active: st
           ) : (
             <button onClick={() => setAuthMode('login')} style={{ background: 'none', border: 'none', color: C.gold, fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-inter-family), sans-serif', cursor: 'pointer', fontWeight: 600 }}>Login</button>
           )}
+          
+          <button onClick={onCartClick} style={{
+            background: 'none', border: `1px solid ${C.gold}50`, color: C.gold,
+            padding: '8px 16px', borderRadius: '100px', cursor: 'pointer',
+            fontSize: '11px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px',
+            fontFamily: 'var(--font-inter-family), sans-serif', textTransform: 'uppercase',
+            boxShadow: `0 0 10px ${C.gold}20`, transition: 'all 0.2s'
+          }}>
+            🛒 Cart <span style={{ background: C.gold, color: C.maroon, borderRadius: '50%', width: '18px', height: '18px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: 900 }}>{cartCount}</span>
+          </button>
         </div>
       </div>
     </nav>
@@ -737,10 +752,10 @@ function AboutSection() {
 }
 
 // ─── CATALOG ──────────────────────────────────────────────────────────────────
-function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'login') => void }) {
+function CatalogSection({ user, setAuthMode, onAddToCart }: { user: any, setAuthMode: (m: 'login') => void, onAddToCart: (product: any) => void }) {
   const [filter, setFilter] = useState('All');
   const [products, setProducts] = useState(PRODUCTS);
-  const [processingProduct, setProcessingProduct] = useState<string | null>(null);
+  const [addedId, setAddedId] = useState<string | null>(null);
   const [isCrawler, setIsCrawler] = useState(false);
   
   useEffect(() => {
@@ -765,38 +780,16 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
   const cats = ['All', 'Incense & Resins', 'Daily Pooja'];
   const filtered = filter === 'All' ? products : products.filter(p => p.cat === filter);
 
-  const buyProduct = async (product: typeof PRODUCTS[0]) => {
-    setProcessingProduct(product.id);
-    try {
-      const res = await fetch('/api/subscription/create-order', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId: product.id, planName: product.name, planPrice: product.price * 100, userId: user?.id || 'guest', name: user?.name, email: user?.email, phone: user?.contact, address: 'Customer Address' })
-      });
-      const order = await res.json();
-      if (order.error) throw new Error(order.error);
-
-      const options = {
-        key: order.keyId, amount: order.amount, currency: order.currency,
-        name: 'Jaya Janardhana', description: `Purchase: ${product.name}`,
-        order_id: order.orderId,
-        handler: async (response: any) => alert('Sacred offering ordered successfully!'),
-        prefill: { name: user?.name, email: user?.email, contact: user?.contact },
-        theme: { color: C.gold }
-      };
-      const rzp = new (window as any).Razorpay(options);
-      rzp.open();
-    } catch (err: any) {
-      alert(`Checkout failed: ${err.message}`);
-    } finally {
-      setProcessingProduct(null);
-    }
+  const handleAdd = (product: typeof PRODUCTS[0]) => {
+    onAddToCart(product);
+    setAddedId(product.id);
+    setTimeout(() => setAddedId(null), 1000);
   };
 
   const showOverlay = !user && !isCrawler;
 
   return (
     <section id="shop" style={{ padding: '80px 40px', maxWidth: '1300px', margin: '0 auto', position: 'relative' }}>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '24px', marginBottom: '60px' }}>
         <div>
           <h2 style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: C.gold, marginBottom: '8px' }}>The Collection.</h2>
@@ -829,8 +822,8 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
                 <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: C.gold, fontFamily: 'var(--font-inter)', marginBottom: '8px', opacity: 0.7 }}>{p.cat}</div>
                 <h3 style={{ fontSize: '17px', fontWeight: 700, marginBottom: '12px', color: C.white }}>{p.name}</h3>
                 <div style={{ fontSize: '22px', fontWeight: 700, color: C.gold, marginBottom: '16px' }}>₹{p.price.toLocaleString('en-IN')}</div>
-                <button onClick={() => buyProduct(p as any)} disabled={processingProduct === p.id} style={{ background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', padding: '12px', width: '100%', borderRadius: '8px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', cursor: processingProduct === p.id ? 'not-allowed' : 'pointer', opacity: processingProduct === p.id ? 0.7 : 1 }}>
-                  {processingProduct === p.id ? 'Processing...' : 'Secure Order'}
+                <button onClick={() => handleAdd(p as any)} style={{ background: addedId === p.id ? C.success : `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: addedId === p.id ? C.white : C.maroon, border: 'none', padding: '12px', width: '100%', borderRadius: '8px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}>
+                  {addedId === p.id ? '✓ Added' : 'Add to Cart'}
                 </button>
               </div>
             </div>
@@ -881,39 +874,12 @@ function CatalogSection({ user, setAuthMode }: { user: any, setAuthMode: (m: 'lo
 }
 
 // ─── SUBSCRIPTION ──────────────────────────────────────────────────────────────
-function SubscriptionSection({ user }: { user: any }) {
+function SubscriptionSection({ user, onSubscribe }: { user: any, onSubscribe: (plan: any, billingMode: 'monthly' | 'annual') => void }) {
   const [billingMode, setBillingMode] = useState<'monthly' | 'annual'>('monthly');
-  const [processingPlan, setProcessingPlan] = useState<string | null>(null);
   const plans = [
     { id: 'sub_pooja', name: 'Daily Pooja Kit', price: 499, annualPrice: 5988, features: ['Complete pooja essentials kit', '3-in-1 premium agarbatti (100g)', 'Pure camphor (100g)', 'Sacred deepa oil (800ml)', 'Traditional dhoop sticks (100g)', 'Ready cotton wicks (40 units)', 'Sacred kumkuma packet'] },
     { id: 'sub_partner', name: 'Divine Partner Pack', price: 799, annualPrice: 9588, features: ['Multiple kits for home & temple', 'Priority doorstep delivery', 'Handpicked premium heritage grade', 'Weekly ritual community support', 'Dedicated account manager', 'Exclusive dhoop access', 'Guaranteed uninterrupted rituals'], featured: true }
   ];
-  const subscribe = async (plan: typeof plans[0]) => {
-    setProcessingPlan(plan.id);
-    const amount = billingMode === 'monthly' ? plan.price : plan.annualPrice;
-    try {
-      const res = await fetch('/api/subscription/create-order', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId: plan.id, planName: plan.name, planPrice: amount * 100, userId: user?.id || 'guest', name: user?.name, email: user?.email, phone: user?.contact, address: 'Subscriber' })
-      });
-      const order = await res.json();
-      if (order.error) throw new Error(order.error);
-      const options = {
-        key: order.keyId, amount: order.amount, currency: order.currency,
-        name: 'Jaya Janardhana', description: `Subscription: ${plan.name}`,
-        order_id: order.orderId,
-        handler: (response: any) => alert('Subscription confirmed!'),
-        prefill: { name: user?.name, email: user?.email, contact: user?.contact },
-        theme: { color: C.gold }
-      };
-      const rzp = new (window as any).Razorpay(options);
-      rzp.open();
-    } catch (err: any) {
-      alert(`Subscription failed: ${err.message}`);
-    } finally {
-      setProcessingPlan(null);
-    }
-  };
   return (
     <section id="subscription" style={{ padding: '120px 40px', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '60px' }}>
@@ -943,8 +909,8 @@ function SubscriptionSection({ user }: { user: any }) {
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 40px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {p.features.map(f => <li key={f} style={{ fontSize: '14px', opacity: 0.7, display: 'flex', gap: '12px' }}><span style={{ color: C.gold }}>✦</span> {f}</li>)}
             </ul>
-            <button onClick={() => subscribe(p)} disabled={processingPlan === p.id} style={{ width: '100%', background: p.featured ? `linear-gradient(135deg, ${C.goldDark}, ${C.gold})` : 'none', border: p.featured ? 'none' : `1px solid ${C.gold}55`, color: p.featured ? C.maroon : C.gold, padding: '16px', borderRadius: '100px', fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', cursor: 'pointer' }}>
-              {processingPlan === p.id ? 'Processing...' : (user ? 'Subscribe Now' : 'Sign in to Subscribe')}
+            <button onClick={() => onSubscribe(p, billingMode)} style={{ width: '100%', background: p.featured ? `linear-gradient(135deg, ${C.goldDark}, ${C.gold})` : 'none', border: p.featured ? 'none' : `1px solid ${C.gold}55`, color: p.featured ? C.maroon : C.gold, padding: '16px', borderRadius: '100px', fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', cursor: 'pointer' }}>
+              {user ? 'Subscribe Now' : 'Sign in to Subscribe'}
             </button>
           </div>
         ))}
@@ -1312,21 +1278,235 @@ function FaqSection() {
 }
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
+// ─── CART DRAWER MODAL ────────────────────────────────────────────────────────
+function CartDrawer({ isOpen, onClose, cart, updateQty, removeProduct, user }: { isOpen: boolean, onClose: () => void, cart: any[], updateQty: (id: string, q: number) => void, removeProduct: (id: string) => void, user: any }) {
+  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '' });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setForm({ name: user.name || '', email: user.email || '', phone: user.contact || '', address: '' });
+    }
+  }, [user]);
+
+  if (!isOpen) return null;
+
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch('/api/cart/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          address: form.address,
+          items: cart,
+          totalAmount: total
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Our team will get back to you shortly');
+        onClose();
+        // Clear cart event
+        window.dispatchEvent(new Event('jj_clear_cart'));
+      } else {
+        alert(`Checkout failed: ${data.error}`);
+      }
+    } catch (err: any) {
+      alert(`Checkout error: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputStyle = { width: '100%', padding: '12px 16px', borderRadius: '8px', background: C.white, border: 'none', color: C.maroon, outline: 'none', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-inter-family), sans-serif', boxSizing: 'border-box' as 'border-box' };
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', justifyContent: 'flex-end' }}>
+      <div style={{ position: 'absolute', inset: 0 }} onClick={onClose} />
+      <div style={{ position: 'relative', width: '100%', maxWidth: '460px', background: 'rgba(26,3,3,0.98)', borderLeft: `1px solid ${C.gold}33`, height: '100%', display: 'flex', flexDirection: 'column', padding: '36px', boxSizing: 'border-box', overflowY: 'auto' }}>
+        <button onClick={onClose} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', color: C.gold, border: 'none', fontSize: '20px', cursor: 'pointer' }}>✕</button>
+        
+        <h3 style={{ fontSize: '24px', color: C.white, marginBottom: '24px', fontWeight: 700, fontFamily: 'var(--font-cormorant-family), serif' }}>Sacred Offerings Cart</h3>
+        
+        {cart.length === 0 ? (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: C.beige, opacity: 0.5 }}>
+            <span style={{ fontSize: '48px', marginBottom: '16px' }}>🛒</span>
+            <p>Your cart is empty.</p>
+          </div>
+        ) : (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {/* Cart Items */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '300px', overflowY: 'auto', paddingRight: '8px' }}>
+              {cart.map(item => (
+                <div key={item.id} style={{ display: 'flex', gap: '16px', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: `1px solid ${C.gold}11` }}>
+                  <img src={item.img} alt={item.name} style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: C.white }}>{item.name}</div>
+                    <div style={{ fontSize: '13px', color: C.gold, marginTop: '2px' }}>₹{item.price}</div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button onClick={() => updateQty(item.id, item.quantity - 1)} style={{ background: 'none', border: `1px solid ${C.gold}33`, color: C.gold, width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer' }}>-</button>
+                    <span style={{ fontSize: '14px', color: C.white }}>{item.quantity}</span>
+                    <button onClick={() => updateQty(item.id, item.quantity + 1)} style={{ background: 'none', border: `1px solid ${C.gold}33`, color: C.gold, width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer' }}>+</button>
+                  </div>
+                  <button onClick={() => removeProduct(item.id)} style={{ background: 'none', border: 'none', color: C.error, cursor: 'pointer', fontSize: '12px' }}>Delete</button>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ height: '1px', background: `${C.gold}22`, margin: '12px 0' }} />
+
+            {/* Total */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '18px', fontWeight: 700, color: C.gold }}>
+              <span>Total Sourced:</span>
+              <span>₹{total.toLocaleString('en-IN')}</span>
+            </div>
+
+            {/* Checkout details form */}
+            <form onSubmit={handleSubmit} style={{ marginTop: '16px' }}>
+              <h4 style={{ fontSize: '14px', color: C.beige, marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Delivery & Contact Information</h4>
+              <input type="text" placeholder="Full Name" required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} style={inputStyle} />
+              <input type="email" placeholder="Email Address" required value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} style={inputStyle} />
+              <input type="tel" placeholder="WhatsApp / Contact Number" required value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} style={inputStyle} />
+              <textarea placeholder="Complete Delivery Address" required value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }} />
+              
+              <button type="submit" disabled={loading} style={{ width: '100%', background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', borderRadius: '100px', padding: '16px', fontSize: '13px', fontWeight: 900, textTransform: 'uppercase', cursor: loading ? 'not-allowed' : 'pointer', letterSpacing: '0.1em', marginTop: '12px' }}>
+                {loading ? 'Submitting Sourcing Request...' : 'Place Sourcing Order'}
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── SUBSCRIPTION REGISTRATION MODAL ──────────────────────────────────────────
+function SubscriptionModal({ isOpen, onClose, plan, billingMode, user }: { isOpen: boolean, onClose: () => void, plan: any, billingMode: 'monthly' | 'annual', user: any }) {
+  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '' });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setForm({ name: user.name || '', email: user.email || '', phone: user.contact || '', address: '' });
+    }
+  }, [user]);
+
+  if (!isOpen || !plan) return null;
+
+  const price = billingMode === 'annual' ? plan.annualPrice : plan.price;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch('/api/subscription/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          address: form.address,
+          planId: plan.id,
+          planName: plan.name,
+          planPrice: price,
+          billingMode
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Our team will get back to you shortly');
+        onClose();
+      } else {
+        alert(`Subscription failed: ${data.error}`);
+      }
+    } catch (err: any) {
+      alert(`Subscription error: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputStyle = { width: '100%', padding: '12px 16px', borderRadius: '8px', background: C.white, border: 'none', color: C.maroon, outline: 'none', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-inter-family), sans-serif', boxSizing: 'border-box' as 'border-box' };
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <div style={{ position: 'absolute', inset: 0 }} onClick={onClose} />
+      <div style={{ position: 'relative', width: '100%', maxWidth: '480px', background: 'rgba(26,3,3,0.98)', border: `1px solid ${C.gold}33`, borderRadius: '24px', padding: '40px', boxSizing: 'border-box', zIndex: 1 }}>
+        <button onClick={onClose} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', color: C.gold, border: 'none', fontSize: '20px', cursor: 'pointer' }}>✕</button>
+        
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="2"><path d="M12 2C12 2 19 8 19 13C19 16.866 15.866 20 12 20C8.13401 20 5 16.866 5 13C5 8 12 2 12 2Z" fill={`${C.gold}33`}/></svg>
+        </div>
+
+        <h3 style={{ fontSize: '22px', color: C.white, marginBottom: '8px', fontWeight: 700, textAlign: 'center', fontFamily: 'var(--font-cormorant-family), serif' }}>Sacred Subscription Registration</h3>
+        <p style={{ fontSize: '14px', color: C.gold, textAlign: 'center', marginBottom: '24px' }}>
+          Plan: <strong>{plan.name}</strong> ({billingMode === 'annual' ? 'Annual' : 'Monthly'} — ₹{price}/{billingMode === 'annual' ? 'yr' : 'mo'})
+        </p>
+
+        <form onSubmit={handleSubmit}>
+          <input type="text" placeholder="Full Name" required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} style={inputStyle} />
+          <input type="email" placeholder="Email Address" required value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} style={inputStyle} />
+          <input type="tel" placeholder="WhatsApp / Contact Number" required value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} style={inputStyle} />
+          <textarea placeholder="Complete Delivery Address" required value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }} />
+          
+          <button type="submit" disabled={loading} style={{ width: '100%', background: `linear-gradient(135deg, ${C.goldDark}, ${C.gold})`, color: C.maroon, border: 'none', borderRadius: '100px', padding: '16px', fontSize: '13px', fontWeight: 900, textTransform: 'uppercase', cursor: loading ? 'not-allowed' : 'pointer', letterSpacing: '0.15em', marginTop: '12px' }}>
+            {loading ? 'Activating Subscription...' : 'Submit Registration Request'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [active, setActive] = useState('shop');
   const [user, setUser] = useState<any>(null);
   const [authMode, setAuthMode] = useState<'login' | 'register' | null>(null);
   const [showAffiliate, setShowAffiliate] = useState(false);
 
+  // Cart & Subscription states
+  const [cart, setCart] = useState<any[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [activeSubPlan, setActiveSubPlan] = useState<any>(null);
+  const [subBillingMode, setSubBillingMode] = useState<'monthly' | 'annual'>('monthly');
+
   useEffect(() => {
     const savedUser = localStorage.getItem('jj_cust_user');
     if (savedUser) setUser(JSON.parse(savedUser));
+    
+    // Load cart from localStorage
+    const savedCart = localStorage.getItem('jj_cart');
+    if (savedCart) {
+      try { setCart(JSON.parse(savedCart)); } catch (e) {}
+    }
+
     const observer = new IntersectionObserver(
       (entries) => { entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }); },
       { rootMargin: '-40% 0px -40% 0px' }
     );
     NAV_SECTIONS.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
-    return () => observer.disconnect();
+
+    // Handle clear cart event
+    const handleClearCartEvent = () => {
+      setCart([]);
+      localStorage.removeItem('jj_cart');
+    };
+    window.addEventListener('jj_clear_cart', handleClearCartEvent);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('jj_clear_cart', handleClearCartEvent);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -1335,10 +1515,60 @@ export default function App() {
     setUser(null);
   };
 
+  // Add item to cart
+  const handleAddToCart = (product: any) => {
+    setCart(prevCart => {
+      const existing = prevCart.find(item => item.id === product.id);
+      let updated;
+      if (existing) {
+        updated = prevCart.map(item =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      } else {
+        updated = [...prevCart, { ...product, quantity: 1 }];
+      }
+      localStorage.setItem('jj_cart', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  // Update item quantity
+  const handleUpdateQty = (id: string, qty: number) => {
+    if (qty <= 0) {
+      handleRemoveFromCart(id);
+      return;
+    }
+    setCart(prevCart => {
+      const updated = prevCart.map(item => item.id === id ? { ...item, quantity: qty } : item);
+      localStorage.setItem('jj_cart', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  // Remove item from cart
+  const handleRemoveFromCart = (id: string) => {
+    setCart(prevCart => {
+      const updated = prevCart.filter(item => item.id !== id);
+      localStorage.setItem('jj_cart', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  // Open subscription registration modal
+  const handleSubscribe = (plan: any, billingMode: 'monthly' | 'annual') => {
+    setActiveSubPlan(plan);
+    setSubBillingMode(billingMode);
+  };
+
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
     <>
       <AuthModal mode={authMode} setMode={setAuthMode} onLogin={setUser} />
-      <Navbar active={active} setActive={setActive} user={user} setAuthMode={setAuthMode} onLogout={handleLogout} />
+      <Navbar active={active} setActive={setActive} user={user} setAuthMode={setAuthMode} onLogout={handleLogout} cartCount={cartCount} onCartClick={() => setIsCartOpen(true)} />
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cart={cart} updateQty={handleUpdateQty} removeProduct={handleRemoveFromCart} user={user} />
+      <SubscriptionModal isOpen={activeSubPlan !== null} onClose={() => setActiveSubPlan(null)} plan={activeSubPlan} billingMode={subBillingMode} user={user} />
+      
       <main>
         {active === 'orders' ? (
           <OrdersSection />
@@ -1351,8 +1581,8 @@ export default function App() {
             <SupplyInfoSection />
             <PanchangaSection />
             <AboutSection />
-            <CatalogSection user={user} setAuthMode={setAuthMode} />
-            <SubscriptionSection user={user} />
+            <CatalogSection user={user} setAuthMode={setAuthMode} onAddToCart={handleAddToCart} />
+            <SubscriptionSection user={user} onSubscribe={handleSubscribe} />
             <FaqSection />
             <ReachOutSection onJoin={() => {
               setShowAffiliate(true);

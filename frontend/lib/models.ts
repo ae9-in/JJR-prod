@@ -46,3 +46,39 @@ const LogSchema = new mongoose.Schema({
 export const Subscriber = mongoose.models.Subscriber || mongoose.model('Subscriber', SubscriberSchema);
 export const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);
 export const SubscriptionLog = mongoose.models.Log || mongoose.model('Log', LogSchema);
+
+// 4. CART ORDER SCHEMA
+const CartOrderSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  address: { type: String, required: true },
+  items: [
+    {
+      id: { type: String, required: true },
+      name: { type: String, required: true },
+      price: { type: Number, required: true },
+      quantity: { type: Number, required: true },
+      img: { type: String }
+    }
+  ],
+  totalAmount: { type: Number, required: true }, // in rupees
+  status: { type: String, enum: ['pending', 'completed'], default: 'pending' }
+}, { timestamps: true });
+
+// 5. SUBSCRIPTION REGISTRATION SCHEMA
+const SubscriptionRegistrationSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  address: { type: String, required: true },
+  planId: { type: String, required: true },
+  planName: { type: String, required: true },
+  planPrice: { type: Number, required: true }, // in rupees
+  billingMode: { type: String, required: true }, // monthly/annual
+  status: { type: String, enum: ['pending', 'active', 'cancelled'], default: 'pending' }
+}, { timestamps: true });
+
+export const CartOrder = mongoose.models.CartOrder || mongoose.model('CartOrder', CartOrderSchema);
+export const SubscriptionRegistration = mongoose.models.SubscriptionRegistration || mongoose.model('SubscriptionRegistration', SubscriptionRegistrationSchema);
+
